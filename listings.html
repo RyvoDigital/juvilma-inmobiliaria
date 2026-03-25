@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Áticos — Juvilma Inmobiliaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gloock&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --bg:        #1c1c1e;
+      --surface:   #242424;
+      --surface2:  #2c2c2e;
+      --accent:    #e8d5a3;
+      --accent-dim:rgba(232,213,163,0.28);
+      --text:      #f2f2f7;
+      --text-muted:#a8a09a;
+      --nav-h:     88px;
+      --pad-x:     clamp(1.5rem, 6vw, 5rem);
+      --ease-out:  cubic-bezier(0.22,1,0.36,1);
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif; font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; width: 100%; object-fit: cover; }
+
+    /* ─── NAV ─── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--pad-x);
+      background: rgba(28,28,30,0.82);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(232,213,163,0.05);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0.75rem; }
+    .nav-logo-mark { width: 36px; height: 36px; flex-shrink: 0; }
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .nav-logo-name { font-family: 'Gloock', serif; font-size: 1rem; letter-spacing: 0.08em; color: var(--accent); }
+    .nav-logo-sub  { font-size: 0.58rem; letter-spacing: 0.28em; color: var(--text-muted); text-transform: uppercase; margin-top: 3px; font-weight: 200; }
+    nav.main { display: flex; align-items: center; gap: clamp(1.2rem,2.5vw,2.5rem); }
+    nav.main a { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text); position: relative; padding-bottom: 3px; transition: color .25s; }
+    nav.main a::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .22s ease; }
+    nav.main a:hover { color: var(--accent); }
+    nav.main a:hover::after { transform: scaleX(1); }
+    .nav-cta { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-dim); padding: 0.6rem 1.4rem; border-radius: 100px; transition: background .28s, color .28s, border-color .28s; }
+    .nav-cta:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+    /* ─── PAGE HEADER ─── */
+    .list-header {
+      padding-top: calc(var(--nav-h) + 3.5rem);
+      padding-left: var(--pad-x); padding-right: var(--pad-x);
+      padding-bottom: 2.5rem;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 1.8rem;
+    }
+    .breadcrumb a { transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: rgba(168,160,154,0.4); }
+    .bc-current { color: var(--accent); }
+    .list-title {
+      font-family: 'Gloock', serif; font-weight: 400;
+      font-size: clamp(3.5rem, 8vw, 9rem);
+      line-height: 0.88; letter-spacing: -0.01em;
+      color: var(--text); margin-bottom: 2rem;
+    }
+    .list-meta {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .list-count { font-size: 0.78rem; letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase; }
+    .list-filters { display: flex; gap: 0.6rem; }
+    .filter-btn {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text); background: var(--surface2);
+      border: 1px solid rgba(232,213,163,0.12); border-radius: 100px;
+      padding: 0.55rem 1.1rem; cursor: pointer;
+      transition: border-color .22s, color .22s;
+    }
+    .filter-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
+    .list-sep { height: 1px; background: rgba(232,213,163,0.1); margin: 2.5rem 0 0; }
+
+    /* ─── FEATURED CARD ─── */
+    .list-featured { padding: 0 var(--pad-x); margin-bottom: 1.5rem; }
+    .featured-card {
+      display: block; position: relative;
+      min-height: 56vh; border-radius: 16px; overflow: hidden;
+      cursor: pointer;
+    }
+    .featured-img {
+      position: absolute; inset: 0;
+      background: url(assets/cat-aticos.png) center/cover no-repeat;
+      transition: transform 10s ease;
+      animation: kbFeatured 12s ease-out forwards;
+    }
+    @keyframes kbFeatured { from { transform:scale(1.06); } to { transform:scale(1.0); } }
+    .featured-card:hover .featured-img { transform: scale(1.03); transition: transform 0.8s var(--ease-out); animation: none; }
+    .featured-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(14,12,10,0.9) 0%, rgba(14,12,10,0.45) 40%, rgba(14,12,10,0.08) 75%, transparent 100%);
+    }
+    .featured-badge {
+      position: absolute; top: 1.5rem; left: 1.5rem; z-index: 2;
+      font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--bg); background: var(--accent);
+      padding: 0.35rem 0.9rem; border-radius: 100px; font-weight: 400;
+    }
+    .featured-content {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem;
+      padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);
+    }
+    .featured-specs {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.6rem;
+    }
+    .featured-name {
+      font-family: 'Gloock', serif; font-weight: 400;
+      font-size: clamp(2rem, 3.5vw, 3.2rem); line-height: 1;
+      color: var(--text); margin-bottom: 0.4rem;
+    }
+    .featured-loc { font-size: 0.75rem; letter-spacing: 0.1em; color: var(--text-muted); }
+    .featured-right { text-align: right; flex-shrink: 0; }
+    .featured-price {
+      font-family: 'Gloock', serif; font-weight: 400;
+      font-size: clamp(1.8rem, 2.5vw, 2.4rem); color: var(--accent);
+      margin-bottom: 0.9rem; white-space: nowrap;
+    }
+    .featured-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--bg); background: var(--accent);
+      padding: 0.7rem 1.5rem; border-radius: 100px; font-weight: 400;
+      transition: background .25s, transform .25s var(--ease-out);
+    }
+    .featured-card:hover .featured-cta { background: var(--text); transform: translateX(3px); }
+
+    /* ─── PROPERTY GRID ─── */
+    .list-grid-section { padding: 0 var(--pad-x) 6rem; }
+    .list-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    .prop-card {
+      position: relative; border-radius: 14px; overflow: hidden;
+      background: var(--surface); border: 1px solid rgba(232,213,163,0.09);
+      height: 460px; display: flex; flex-direction: column;
+      cursor: pointer; transition: transform .45s var(--ease-out), box-shadow .45s ease, border-color .3s;
+      /* reveal start state */
+      opacity: 0; transform: translateY(40px);
+    }
+    .prop-card.revealed {
+      opacity: 1; transform: translateY(0);
+      transition: opacity .65s var(--ease-out), transform .65s var(--ease-out),
+                  box-shadow .45s ease, border-color .3s;
+    }
+    .prop-card:hover {
+      transform: translateY(-7px) !important;
+      box-shadow: 0 28px 70px rgba(0,0,0,0.55);
+      border-color: rgba(232,213,163,0.22);
+    }
+    .card-img-wrap {
+      position: relative; height: 58%; overflow: hidden; flex-shrink: 0;
+    }
+    .card-img {
+      width: 100%; height: 100%;
+      background: url(assets/cat-aticos.png) center/cover no-repeat;
+      transition: transform .7s var(--ease-out);
+    }
+    .prop-card:hover .card-img { transform: scale(1.04); }
+    /* Per-card image variation via filter */
+    .prop-card:nth-child(1) .card-img { filter: hue-rotate(12deg) brightness(0.92); }
+    .prop-card:nth-child(2) .card-img { filter: hue-rotate(-8deg) brightness(1.04) saturate(0.88); }
+    .prop-card:nth-child(3) .card-img { filter: brightness(0.86) saturate(1.1); }
+    .prop-card:nth-child(4) .card-img { filter: hue-rotate(18deg) brightness(0.96); }
+    .prop-card:nth-child(5) .card-img { filter: brightness(1.08) saturate(0.88); }
+    .prop-card:nth-child(6) .card-img { filter: hue-rotate(-12deg) brightness(0.89); }
+    .prop-card:nth-child(7) .card-img { filter: saturate(0.72) brightness(0.93); }
+    .card-img-grad {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(to top, var(--surface), transparent);
+    }
+    .card-body {
+      padding: 1.1rem 1.25rem 1.3rem; flex: 1; display: flex; flex-direction: column;
+    }
+    .card-specs {
+      font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.45rem;
+    }
+    .card-name {
+      font-family: 'Gloock', serif; font-weight: 400; font-size: 1.38rem;
+      line-height: 1.1; color: var(--text); margin-bottom: 0.3rem;
+    }
+    .card-location { font-size: 0.72rem; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: auto; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; }
+    .card-price { font-size: 0.88rem; letter-spacing: 0.04em; color: var(--accent); font-weight: 300; }
+    .card-ver {
+      font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); opacity: 0; transform: translateY(6px);
+      transition: opacity .3s ease, transform .3s var(--ease-out);
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+    .prop-card:hover .card-ver { opacity: 1; transform: translateY(0); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--surface2); border-top: 1px solid rgba(232,213,163,0.07);
+      padding: 2.5rem var(--pad-x);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 0.65rem; }
+    .footer-logo-name { font-family: 'Gloock', serif; font-size: 0.95rem; letter-spacing: 0.08em; color: var(--accent); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); transition: color .2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { font-size: 0.65rem; letter-spacing: 0.1em; color: rgba(168,160,154,0.5); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav.main, .nav-cta { display: none; }
+      .list-grid { grid-template-columns: 1fr; }
+      .featured-content { flex-direction: column; align-items: flex-start; }
+      .featured-right { text-align: left; }
+      .footer-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<header>
+  <a href="index.html" class="nav-logo" aria-label="Juvilma Inmobiliaria">
+    <svg class="nav-logo-mark" viewBox="0 0 36 36" fill="none">
+      <rect x="0.5" y="0.5" width="35" height="35" stroke="rgba(232,213,163,0.3)" stroke-width="0.5"/>
+      <path d="M22 8 L22 24 Q22 30 15 30 Q10 30 9 26" stroke="#e8d5a3" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <line x1="14" y1="8" x2="26" y2="8" stroke="#e8d5a3" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="18" y1="16" x2="25" y2="16" stroke="rgba(232,213,163,0.45)" stroke-width="1" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-text">
+      <span class="nav-logo-name">Juvilma</span>
+      <span class="nav-logo-sub">Inmobiliaria</span>
+    </span>
+  </a>
+  <nav class="main" aria-label="Principal">
+    <a href="index.html">Inicio</a>
+    <a href="propiedades.html">Propiedades</a>
+    <a href="#">Servicios</a>
+    <a href="#">Nosotros</a>
+    <a href="#">Contacto</a>
+  </nav>
+  <a href="#" class="nav-cta">Solicitar visita</a>
+</header>
+
+<main>
+
+  <!-- ═══ PAGE HEADER ═══ -->
+  <section class="list-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Inicio</a>
+      <span>/</span>
+      <a href="propiedades.html">Propiedades</a>
+      <span>/</span>
+      <span class="bc-current" id="bc-cat">Áticos</span>
+    </nav>
+    <h1 class="list-title" id="page-title">Áticos</h1>
+    <div class="list-meta">
+      <span class="list-count" id="page-count">8 propiedades disponibles</span>
+      <div class="list-filters">
+        <button class="filter-btn">Precio <span>▾</span></button>
+        <button class="filter-btn">Ordenar <span>▾</span></button>
+      </div>
+    </div>
+    <div class="list-sep"></div>
+  </section>
+
+  <!-- ═══ FEATURED CARD ═══ -->
+  <section class="list-featured">
+    <a href="propiedad.html" class="featured-card" aria-label="Ver Ático Castellana">
+      <div class="featured-img" id="featured-img"></div>
+      <div class="featured-overlay"></div>
+      <div class="featured-badge">Destacado</div>
+      <div class="featured-content">
+        <div class="featured-left">
+          <div class="featured-specs" id="feat-specs">4 dorm · 3 baños · 285 m²</div>
+          <h2 class="featured-name" id="feat-name">Ático Castellana</h2>
+          <div class="featured-loc" id="feat-loc">Castellana, Madrid</div>
+        </div>
+        <div class="featured-right">
+          <div class="featured-price" id="feat-price">€2.800.000</div>
+          <span class="featured-cta">Ver propiedad →</span>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ═══ PROPERTY GRID ═══ -->
+  <section class="list-grid-section">
+    <div class="list-grid" id="prop-grid">
+
+      <a href="propiedad.html" class="prop-card">
+        <div class="card-img-wrap"><div class="card-img"></div><div class="card-img-grad"></div></div>
+        <div class="card-body">
+          <div class="card-specs">3 dorm · 2 baños · 220 m²</div>
+          <div class="card-name">Ático Salamanca</div>
+          <div class="card-location">Salamanca, Madrid</div>
+          <div class="card-footer">
+            <span class="card-price">€1.950.000</span>
+            <span class="card-ver">Ver →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="propiedad.html" class="prop-card">
+        <div class="card-img-wrap"><div class="card-img"></div><div class="card-img-grad"></div></div>
+        <div class="card-body">
+          <div class="card-specs">3 dorm · 2 baños · 195 m²</div>
+          <div class="card-name">Ático Retiro</div>
+          <div class="card-location">Retiro, Madrid</div>
+          <div class="card-footer">
+            <span class="card-price">€1.650.000</span>
+            <span class="card-ver">Ver →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="propiedad.html" class="prop-card">
+        <div class="card-img-wrap"><div class="card-img"></div><div class="card-img-grad"></div></div>
+        <div class="card-body">
+          <div class="card-specs">2 dorm · 2 baños · 178 m²</div>
+          <div class="card-name">Ático Chamberí</div>
+          <div class="card-location">Chamberí, Madrid</div>
+          <div class="card-footer">
+            <span class="card-price">€1.450.000</span>
+            <span class="card-ver">Ver →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="propiedad.html" class="prop-card">
+        <div class="card-img-wrap"><div class="card-img"></div><div class="card-img-grad"></div></div>
+        <div class="card-body">
+          <div class="card-specs">2 dorm · 1 baño · 165 m²</div>
+          <div class="card-name">Ático Gran Vía</div>
+          <div class="card-location">Centro, Madrid</div>
+          <div class="card-footer">
+            <span class="card-price">€1.350.000</span>
+            <span class="card-ver">Ver →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="propiedad.html" class="prop-card">
+        <div class="card-img-wrap"><div class="card-img"></div><div class="card-img-grad"></div></div>
+        <div class="card-body">
+          <div class="card-specs">2 dorm · 2 baños · 158 m²</div>
+          <div class="card-name">Ático La Latina</div>
+          <div class="card-location">La Latina, Madrid</div>
+          <div class="card-footer">
+            <span class="card-price">€1.280.000</span>
+            <span class="card-ver">Ver →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="propiedad.html" class="prop-card">
+        <div class="card-img-wrap"><div class="card-img"></div><div class="card-img-grad"></div></div>
+        <div class="card-body">
+          <div class="card-specs">2 dorm · 1 baño · 148 m²</div>
+          <div class="card-name">Ático Moncloa</div>
+          <div class="card-location">Moncloa, Madrid</div>
+          <div class="card-footer">
+            <span class="card-price">€1.200.000</span>
+            <span class="card-ver">Ver →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="propiedad.html" class="prop-card">
+        <div class="card-img-wrap"><div class="card-img"></div><div class="card-img-grad"></div></div>
+        <div class="card-body">
+          <div class="card-specs">1 dorm · 1 baño · 130 m²</div>
+          <div class="card-name">Ático Malasaña</div>
+          <div class="card-location">Malasaña, Madrid</div>
+          <div class="card-footer">
+            <span class="card-price">€1.200.000</span>
+            <span class="card-ver">Ver →</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-logo">
+    <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+      <rect x="0.5" y="0.5" width="35" height="35" stroke="rgba(232,213,163,0.3)" stroke-width="0.5"/>
+      <path d="M22 8 L22 24 Q22 30 15 30 Q10 30 9 26" stroke="#e8d5a3" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <line x1="14" y1="8" x2="26" y2="8" stroke="#e8d5a3" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    <span class="footer-logo-name">Juvilma</span>
+  </div>
+  <div class="footer-links">
+    <a href="index.html">Inicio</a>
+    <a href="propiedades.html">Propiedades</a>
+    <a href="#">Servicios</a>
+    <a href="#">Contacto</a>
+  </div>
+  <span class="footer-copy">© 2025 Juvilma Inmobiliaria · Madrid</span>
+</footer>
+
+<script>
+(function () {
+  /* ── IntersectionObserver reveal ── */
+  const cards = document.querySelectorAll('.prop-card');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, _) => {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        const idx  = Array.from(cards).indexOf(card);
+        setTimeout(() => card.classList.add('revealed'), idx * 90);
+        obs.unobserve(card);
+      }
+    });
+  }, { threshold: 0.12 });
+  cards.forEach(c => obs.observe(c));
+
+  /* ── Category from URL params ── */
+  const CATS = {
+    aticos:  { title: 'Áticos',  count: 8,  img: 'assets/cat-aticos.png',  feat: { name:'Ático Castellana', loc:'Castellana, Madrid', specs:'4 dorm · 3 baños · 285 m²', price:'€2.800.000' } },
+    pisos:   { title: 'Pisos',   count: 24, img: 'assets/cat-pisos.png',   feat: { name:'Piso Salamanca',   loc:'Salamanca, Madrid',  specs:'4 dorm · 3 baños · 310 m²', price:'€3.200.000' } },
+    chalets: { title: 'Chalets', count: 11, img: 'assets/cat-chalets.png', feat: { name:'Chalet La Moraleja',loc:'Alcobendas, Madrid',  specs:'6 dorm · 5 baños · 680 m²', price:'€4.500.000' } },
+    casas:   { title: 'Casas',   count: 6,  img: 'assets/cat-casas.png',   feat: { name:'Casa Retiro',      loc:'Retiro, Madrid',     specs:'5 dorm · 4 baños · 420 m²', price:'€2.200.000' } },
+    locales: { title: 'Locales', count: 15, img: 'assets/cat-locales.png', feat: { name:'Local Castellana', loc:'Castellana, Madrid', specs:'480 m² · Planta baja',       price:'€1.800.000' } },
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const catKey = params.get('cat') || 'aticos';
+  const cat    = CATS[catKey] || CATS.aticos;
+
+  document.getElementById('bc-cat').textContent   = cat.title;
+  document.getElementById('page-title').textContent = cat.title;
+  document.getElementById('page-count').textContent = `${cat.count} propiedades disponibles`;
+  document.getElementById('featured-img').style.backgroundImage = `url(${cat.img})`;
+  document.getElementById('feat-name').textContent  = cat.feat.name;
+  document.getElementById('feat-loc').textContent   = cat.feat.loc;
+  document.getElementById('feat-specs').textContent = cat.feat.specs;
+  document.getElementById('feat-price').textContent = cat.feat.price;
+  document.title = `${cat.title} — Juvilma Inmobiliaria`;
+
+  // Update grid card images to match category
+  document.querySelectorAll('.card-img').forEach(el => {
+    el.style.backgroundImage = `url(${cat.img})`;
+  });
+})();
+</script>
+
+</body>
+</html>

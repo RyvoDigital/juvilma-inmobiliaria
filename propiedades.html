@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propiedades — Juvilma Inmobiliaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gloock&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─────────────────────────────────────────
+       TOKENS
+    ───────────────────────────────────────── */
+    :root {
+      --bg:           #1c1c1e;
+      --surface:      #2c2c2e;
+      --accent:       #e8d5a3;
+      --accent-dim:   rgba(232, 213, 163, 0.38);
+      --accent-faint: rgba(232, 213, 163, 0.06);
+      --text:         #f2f2f7;
+      --text-muted:   #a8a09a;
+      --nav-h:        88px;
+      --ease-out:     cubic-bezier(0.22, 1, 0.36, 1);
+      --card-w:       300px;
+      --card-pad-x:   clamp(1.5rem, 5vw, 4rem);
+      --card-pad-b:   clamp(2rem, 5vh, 4rem);
+      --slide-dur:    0.6s;
+    }
+
+    /* ─────────────────────────────────────────
+       RESET
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-weight: 300;
+      overflow: hidden;
+      height: 100svh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─────────────────────────────────────────
+       NAVIGATION
+    ───────────────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--card-pad-x);
+      background: rgba(28, 28, 30, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(232, 213, 163, 0.05);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .nav-logo-mark { width: 36px; height: 36px; flex-shrink: 0; }
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .nav-logo-name { font-family: 'Gloock', serif; font-weight: 400; font-size: 1rem; letter-spacing: 0.08em; color: var(--accent); }
+    .nav-logo-sub  { font-family: 'DM Sans', sans-serif; font-weight: 200; font-size: 0.58rem; letter-spacing: 0.28em; color: var(--text-muted); text-transform: uppercase; margin-top: 3px; }
+
+    nav { display: flex; align-items: center; gap: clamp(1.2rem, 2.5vw, 2.5rem); }
+    nav a {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300; font-size: 0.72rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      position: relative; padding-bottom: 3px;
+      transition: color 0.25s ease;
+    }
+    nav a.active-link { color: var(--accent); }
+    nav a::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.22s ease;
+    }
+    nav a:hover { color: var(--accent); }
+    nav a:hover::after, nav a.active-link::after { transform: scaleX(1); }
+
+    .nav-cta {
+      font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.68rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); border: 1px solid var(--accent-dim);
+      padding: 0.6rem 1.4rem; border-radius: 100px; text-decoration: none;
+      transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+    }
+    .nav-cta:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+    /* ─────────────────────────────────────────
+       STAGE
+    ───────────────────────────────────────── */
+    .prop-stage {
+      position: fixed; inset: 0;
+      overflow: hidden;
+    }
+
+    /* ── Background layers ── */
+    .prop-bg-wrap { position: absolute; inset: 0; z-index: 0; }
+    .prop-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0;
+      transition: opacity 0.95s ease;
+      transform: scale(1.08);
+      will-change: transform, opacity;
+    }
+    .prop-bg.active {
+      opacity: 1;
+      animation: kenBurns 14s ease-out forwards;
+    }
+    @keyframes kenBurns {
+      from { transform: scale(1.08); }
+      to   { transform: scale(1.00); }
+    }
+    .prop-bg[data-cat="aticos"]  { background-image: url(assets/cat-aticos.png); }
+    .prop-bg[data-cat="pisos"]   { background-image: url(assets/cat-pisos.png); }
+    .prop-bg[data-cat="chalets"] { background-image: url(assets/cat-chalets.png); }
+    .prop-bg[data-cat="casas"]   { background-image: url(assets/cat-casas.png); }
+    .prop-bg[data-cat="locales"] { background-image: url(assets/cat-locales.png); }
+
+    /* ── Two lightweight overlays ── */
+    .prop-overlay-bottom {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(to top,
+        rgba(20, 18, 14, 0.78) 0%,
+        rgba(20, 18, 14, 0.22) 24%,
+        transparent 44%
+      );
+    }
+    .prop-overlay-left {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(to right,
+        rgba(20, 18, 14, 0.42) 0%,
+        rgba(20, 18, 14, 0.10) 28%,
+        transparent 42%
+      );
+    }
+
+    /* ── Noise ── */
+    .prop-noise {
+      position: absolute; inset: 0; z-index: 2;
+      pointer-events: none; opacity: 0.028;
+    }
+
+    /* ── Ghost title ── */
+    .prop-ghost {
+      position: absolute;
+      bottom: var(--card-pad-b);
+      right: var(--card-pad-x);
+      z-index: 3;
+      font-family: 'Gloock', serif;
+      font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(232, 213, 163, 0.35);
+      white-space: nowrap;
+      pointer-events: none;
+      text-align: right;
+      text-rendering: optimizeLegibility;
+      transition: opacity 0.3s ease;
+    }
+    .prop-ghost.fading { opacity: 0; }
+
+    /* ── Eyebrow ── */
+    .prop-eyebrow {
+      position: absolute;
+      top: calc(var(--nav-h) + 2.2rem);
+      left: var(--card-pad-x);
+      z-index: 10;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.66rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent);
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .prop-eyebrow::before {
+      content: ''; display: block;
+      width: 28px; height: 1px;
+      background: var(--accent-dim);
+    }
+
+    /* ── Counter ── */
+    .prop-counter {
+      position: absolute;
+      top: calc(var(--nav-h) + 2.2rem);
+      right: var(--card-pad-x);
+      z-index: 10;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.66rem; letter-spacing: 0.16em; color: var(--text-muted);
+    }
+    #counter-current {
+      font-family: 'Gloock', serif; font-size: 1.1rem; color: var(--accent);
+      vertical-align: middle; margin-right: 1px;
+    }
+
+    /* ─────────────────────────────────────────
+       CARD ANCHOR (bottom-left)
+    ───────────────────────────────────────── */
+    .prop-card-anchor {
+      position: absolute;
+      bottom: var(--card-pad-b);
+      left: var(--card-pad-x);
+      z-index: 20;
+      width: var(--card-w);
+    }
+
+    /* ── The card ── */
+    .prop-card {
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(232, 213, 163, 0.14);
+      background: rgba(14, 12, 10, 0.88);
+      will-change: transform, opacity;
+      /* Transition set inline via JS for fine control */
+    }
+
+    .prop-card-thumb {
+      width: 100%;
+      height: 168px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    /* Subtle inner gradient on thumb so it bleeds into the body */
+    .prop-card-thumb::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
+      background: linear-gradient(to top, rgba(14,12,10,0.88), transparent);
+    }
+
+    .prop-card-body {
+      padding: 1.1rem 1.25rem 1.3rem;
+      border-top: 1px solid rgba(232, 213, 163, 0.1);
+    }
+    .prop-card-eyebrow {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.6rem; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--text-muted);
+      display: block; margin-bottom: 0.45rem;
+    }
+    .prop-card-title {
+      font-family: 'Gloock', serif; font-weight: 400;
+      font-size: 2rem; line-height: 1; color: var(--text);
+      display: block; margin-bottom: 0.45rem;
+    }
+    .prop-card-price {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.78rem; letter-spacing: 0.04em;
+      color: var(--accent); display: block; margin-bottom: 1rem;
+    }
+    .prop-card-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--bg); background: var(--accent);
+      padding: 0.6rem 1.15rem; border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.25s var(--ease-out);
+    }
+    .prop-card-cta:hover { background: var(--text); transform: translateX(3px); }
+    .prop-card-cta svg { width: 12px; height: 12px; }
+
+    /* ─────────────────────────────────────────
+       CONTROLS (below card)
+    ───────────────────────────────────────── */
+    .prop-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    /* Progress dots */
+    .prop-dots { display: flex; align-items: center; gap: 7px; }
+    .prop-dot {
+      position: relative; overflow: hidden;
+      height: 2px; width: 20px;
+      background: rgba(232, 213, 163, 0.2);
+      border-radius: 2px; cursor: pointer;
+      transition: width 0.35s var(--ease-out), background 0.3s ease;
+    }
+    .prop-dot.active {
+      width: 44px;
+      background: rgba(232, 213, 163, 0.25);
+    }
+    /* Timer fill inside active dot */
+    .prop-dot.active::after {
+      content: '';
+      position: absolute; top: 0; left: 0; bottom: 0;
+      width: 0%;
+      background: var(--accent);
+      border-radius: inherit;
+      animation: dotTimer 8s linear forwards;
+    }
+    @keyframes dotTimer {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+    .prop-dot:hover:not(.active) { background: rgba(232, 213, 163, 0.45); }
+
+    /* Arrow buttons */
+    .prop-arrows { display: flex; align-items: center; gap: 0.5rem; }
+    .prop-arrow {
+      width: 40px; height: 40px;
+      border: 1px solid rgba(232, 213, 163, 0.25);
+      border-radius: 50%;
+      background: rgba(14, 12, 10, 0.6);
+      color: var(--accent); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.22s, background 0.22s, transform 0.22s var(--ease-out);
+      outline: none;
+    }
+    .prop-arrow:hover {
+      border-color: var(--accent);
+      background: rgba(232, 213, 163, 0.1);
+      transform: scale(1.1);
+    }
+    .prop-arrow:active { transform: scale(0.94); }
+    .prop-arrow svg { width: 16px; height: 16px; }
+
+    /* ─────────────────────────────────────────
+       ENTRANCE ANIMATION
+    ───────────────────────────────────────── */
+    .prop-stage,
+    .prop-eyebrow,
+    .prop-counter,
+    .prop-card-anchor {
+      opacity: 0;
+      transition: opacity 0.7s var(--ease-out);
+    }
+    .prop-stage.loaded      { opacity: 1; }
+    .prop-eyebrow.loaded,
+    .prop-counter.loaded    { opacity: 1; }
+    .prop-card-anchor.loaded { opacity: 1; }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 640px) {
+      nav, .nav-cta { display: none; }
+      :root { --card-w: min(280px, calc(100vw - 3rem)); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══ -->
+  <header>
+    <a href="index.html" class="nav-logo" aria-label="Juvilma Inmobiliaria">
+      <svg class="nav-logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="35" height="35" stroke="rgba(232,213,163,0.3)" stroke-width="0.5"/>
+        <path d="M22 8 L22 24 Q22 30 15 30 Q10 30 9 26" stroke="#e8d5a3" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <line x1="14" y1="8" x2="26" y2="8" stroke="#e8d5a3" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="18" y1="16" x2="25" y2="16" stroke="rgba(232,213,163,0.45)" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      <span class="nav-logo-text">
+        <span class="nav-logo-name">Juvilma</span>
+        <span class="nav-logo-sub">Inmobiliaria</span>
+      </span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="index.html">Inicio</a>
+      <a href="propiedades.html" class="active-link">Propiedades</a>
+      <a href="#">Servicios</a>
+      <a href="#">Nosotros</a>
+      <a href="#">Contacto</a>
+    </nav>
+    <a href="#" class="nav-cta">Solicitar visita</a>
+  </header>
+
+
+  <!-- ═══ STAGE ═══ -->
+  <main class="prop-stage" id="prop-stage">
+
+    <!-- Background layers -->
+    <div class="prop-bg-wrap" aria-hidden="true">
+      <div class="prop-bg active" data-cat="aticos"></div>
+      <div class="prop-bg"        data-cat="pisos"></div>
+      <div class="prop-bg"        data-cat="chalets"></div>
+      <div class="prop-bg"        data-cat="casas"></div>
+      <div class="prop-bg"        data-cat="locales"></div>
+    </div>
+
+    <!-- Overlays -->
+    <div class="prop-overlay-bottom" aria-hidden="true"></div>
+    <div class="prop-overlay-left"   aria-hidden="true"></div>
+
+    <!-- Noise -->
+    <svg class="prop-noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#noise)"/>
+    </svg>
+
+    <!-- Ghost title -->
+    <div class="prop-ghost" id="prop-ghost" aria-hidden="true">Áticos</div>
+
+    <!-- Eyebrow + counter -->
+    <div class="prop-eyebrow" id="prop-eyebrow">Nuestras categorías</div>
+    <div class="prop-counter" id="prop-counter">
+      <span id="counter-current">01</span><span> / 05</span>
+    </div>
+
+    <!-- Single card anchor -->
+    <div class="prop-card-anchor" id="prop-card-anchor">
+
+      <!-- The card (content swapped via JS) -->
+      <article class="prop-card" id="prop-card" aria-live="polite">
+        <div class="prop-card-thumb" id="card-thumb"></div>
+        <div class="prop-card-body">
+          <span class="prop-card-eyebrow" id="card-eyebrow">8 propiedades</span>
+          <span class="prop-card-title"   id="card-title">Áticos</span>
+          <span class="prop-card-price"   id="card-price">Desde €1.200.000</span>
+          <a    class="prop-card-cta"     id="card-cta" href="listings.html?cat=aticos">
+            Ver todas
+            <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Controls row -->
+      <div class="prop-controls">
+        <div class="prop-dots" id="prop-dots" role="tablist">
+          <div class="prop-dot active" data-index="0" role="tab" tabindex="0" aria-label="Áticos"></div>
+          <div class="prop-dot"        data-index="1" role="tab" tabindex="0" aria-label="Pisos"></div>
+          <div class="prop-dot"        data-index="2" role="tab" tabindex="0" aria-label="Chalets"></div>
+          <div class="prop-dot"        data-index="3" role="tab" tabindex="0" aria-label="Casas"></div>
+          <div class="prop-dot"        data-index="4" role="tab" tabindex="0" aria-label="Locales"></div>
+        </div>
+        <div class="prop-arrows">
+          <button class="prop-arrow" id="arrow-prev" aria-label="Anterior">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="prop-arrow" id="arrow-next" aria-label="Siguiente">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /card-anchor -->
+  </main>
+
+
+  <!-- ═══ SCRIPT ═══ -->
+  <script>
+  (function () {
+
+    const CATEGORIES = [
+      { slug: 'aticos',  label: 'Áticos',  count: '8 propiedades',  price: 'Desde €1.200.000' },
+      { slug: 'pisos',   label: 'Pisos',   count: '24 propiedades', price: 'Desde €320.000'   },
+      { slug: 'chalets', label: 'Chalets', count: '11 propiedades', price: 'Desde €890.000'   },
+      { slug: 'casas',   label: 'Casas',   count: '6 propiedades',  price: 'Desde €650.000'   },
+      { slug: 'locales', label: 'Locales', count: '15 propiedades', price: 'Desde €180.000'   },
+    ];
+    const TOTAL       = CATEGORIES.length;
+    const SLIDE_DUR   = 600;   // ms — matches CSS --slide-dur
+    const AUTO_MS     = 8000;  // auto-advance interval
+
+    let current       = 0;
+    let isAnimating   = false;
+    let autoTimer     = null;
+
+    // Elements
+    const bgs         = document.querySelectorAll('.prop-bg');
+    const dots        = document.querySelectorAll('.prop-dot');
+    const ghost       = document.getElementById('prop-ghost');
+    const counter     = document.getElementById('counter-current');
+    const card        = document.getElementById('prop-card');
+    const thumb       = document.getElementById('card-thumb');
+    const eyebrow     = document.getElementById('card-eyebrow');
+    const titleEl     = document.getElementById('card-title');
+    const priceEl     = document.getElementById('card-price');
+    const ctaEl       = document.getElementById('card-cta');
+
+    // ── Set card thumbnail ──────────────────────────────────
+    function setThumb(slug) {
+      thumb.style.backgroundImage = `url(assets/cat-${slug}.png)`;
+    }
+
+    // ── Swap card content instantly (no transition) ─────────
+    function swapContent(index) {
+      const cat = CATEGORIES[index];
+      eyebrow.textContent = cat.count;
+      titleEl.textContent = cat.label;
+      priceEl.textContent = cat.price;
+      ctaEl.href = `listings.html?cat=${cat.slug}`;
+      setThumb(cat.slug);
+    }
+
+    // ── Update background ───────────────────────────────────
+    function updateBg(prev, next) {
+      bgs[prev].classList.remove('active');
+      // restart Ken Burns on incoming
+      bgs[next].classList.remove('active');
+      void bgs[next].offsetWidth;
+      bgs[next].classList.add('active');
+    }
+
+    // ── Update ghost + counter + dots ──────────────────────
+    function updateUI(prev, next) {
+      // Counter
+      counter.textContent = String(next + 1).padStart(2, '0');
+
+      // Ghost: fade out → swap → fade in
+      ghost.classList.add('fading');
+      setTimeout(() => {
+        ghost.textContent = CATEGORIES[next].label;
+        ghost.classList.remove('fading');
+      }, 300);
+
+      // Dots: remove active, re-add (restarts CSS animation)
+      dots[prev].classList.remove('active');
+      dots[next].classList.remove('active');
+      void dots[next].offsetWidth; // force reflow to restart animation
+      dots[next].classList.add('active');
+    }
+
+    // ── Core transition ─────────────────────────────────────
+    function transitionTo(next, direction) {
+      if (isAnimating || next === current) return;
+      isAnimating = true;
+
+      const prev    = current;
+      current       = next;
+      const outSign = direction === 'prev' ? '110%' : '-110%';
+      const inSign  = direction === 'prev' ? '-110%' : '110%';
+
+      // 1. Update background & UI immediately
+      updateBg(prev, next);
+      updateUI(prev, next);
+
+      // 2. Slide card OUT
+      card.style.transition = `transform ${SLIDE_DUR}ms var(--ease-out), opacity ${SLIDE_DUR * 0.65}ms ease`;
+      card.style.transform  = `translateX(${outSign})`;
+      card.style.opacity    = '0';
+
+      setTimeout(() => {
+        // 3. Swap content while card is off-screen
+        swapContent(next);
+
+        // 4. Place card on the opposite side instantly (no transition)
+        card.style.transition = 'none';
+        card.style.transform  = `translateX(${inSign})`;
+        card.style.opacity    = '0';
+
+        // 5. Force reflow, then animate IN
+        void card.offsetWidth;
+        card.style.transition = `transform ${SLIDE_DUR}ms var(--ease-out), opacity ${SLIDE_DUR * 0.65}ms ease 0.04s`;
+        card.style.transform  = 'translateX(0)';
+        card.style.opacity    = '1';
+
+        setTimeout(() => { isAnimating = false; }, SLIDE_DUR);
+      }, SLIDE_DUR * 0.55); // swap content slightly before animation ends for smoothness
+    }
+
+    // ── Auto-advance ────────────────────────────────────────
+    function startTimer() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(() => {
+        transitionTo((current + 1) % TOTAL, 'next');
+      }, AUTO_MS);
+    }
+
+    function navigate(direction) {
+      const next = direction === 'next'
+        ? (current + 1) % TOTAL
+        : (current - 1 + TOTAL) % TOTAL;
+      transitionTo(next, direction);
+      startTimer(); // reset timer on manual nav
+    }
+
+    // ── Event listeners ─────────────────────────────────────
+    document.getElementById('arrow-next').addEventListener('click', () => navigate('next'));
+    document.getElementById('arrow-prev').addEventListener('click', () => navigate('prev'));
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.dataset.index);
+        const dir = idx > current ? 'next' : 'prev';
+        transitionTo(idx, dir);
+        startTimer();
+      });
+      dot.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const idx = parseInt(dot.dataset.index);
+          const dir = idx > current ? 'next' : 'prev';
+          transitionTo(idx, dir);
+          startTimer();
+        }
+      });
+    });
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') navigate('next');
+      if (e.key === 'ArrowLeft')  navigate('prev');
+    });
+
+    // Touch / swipe
+    let touchX = null;
+    document.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend',   e => {
+      if (touchX === null) return;
+      const d = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(d) > 50) navigate(d < 0 ? 'next' : 'prev');
+      touchX = null;
+    }, { passive: true });
+
+    // ── Init ────────────────────────────────────────────────
+    swapContent(0);
+    startTimer();
+
+    // Page entrance
+    setTimeout(() => document.getElementById('prop-stage').classList.add('loaded'),       80);
+    setTimeout(() => document.getElementById('prop-eyebrow').classList.add('loaded'),     260);
+    setTimeout(() => document.getElementById('prop-counter').classList.add('loaded'),     340);
+    setTimeout(() => document.getElementById('prop-card-anchor').classList.add('loaded'), 480);
+
+  })();
+  </script>
+
+</body>
+</html>

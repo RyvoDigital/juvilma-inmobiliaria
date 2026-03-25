@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juvilma Inmobiliaria — Propiedades de Lujo en Madrid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gloock&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─────────────────────────────────────────
+       TOKENS
+    ───────────────────────────────────────── */
+    :root {
+      --bg:          #1c1c1e;
+      --surface:     #2c2c2e;
+      --accent:      #e8d5a3;
+      --accent-dim:  rgba(232, 213, 163, 0.55);
+      --text:        #f2f2f7;
+      --text-muted:  #a8a09a;
+      --overlay-l:   rgba(20, 18, 14, 0.78);
+      --overlay-r:   rgba(20, 18, 14, 0.08);
+      --nav-h:       88px;
+      --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ─────────────────────────────────────────
+       RESET
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─────────────────────────────────────────
+       NAVIGATION
+    ───────────────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+
+      /* load animation */
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    header.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out),
+                  background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+    header.scrolled {
+      background: rgba(28, 28, 30, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+    .nav-logo-name {
+      font-family: 'Gloock', serif;
+      font-weight: 400;
+      font-size: 1.0rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+    .nav-logo-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 200;
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    /* Nav links */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.2rem, 2.5vw, 2.5rem);
+    }
+    nav a {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 3px;
+      transition: color 0.25s ease;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.22s ease;
+    }
+    nav a:hover { color: var(--accent); }
+    nav a:hover::after { transform: scaleX(1); }
+
+    /* Nav CTA */
+    .nav-cta {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+      padding: 0.6rem 1.4rem;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+    }
+    .nav-cta:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100svh;
+      min-height: 600px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* Video layer — two elements for seamless crossfade */
+    .hero-video-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-vid {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      will-change: opacity;
+    }
+    #vid1 { opacity: 1; }
+    #vid2 { opacity: 0; }
+
+    /* Noise texture */
+    .hero-noise {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.025;
+    }
+
+    /* Gradient overlay */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(
+        105deg,
+        rgba(20, 18, 14, 0.82) 0%,
+        rgba(20, 18, 14, 0.52) 38%,
+        rgba(20, 18, 14, 0.14) 62%,
+        rgba(20, 18, 14, 0.05) 100%
+      );
+    }
+    /* Bottom fade for scroll indicator */
+    .hero-overlay::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 160px;
+      background: linear-gradient(to top, rgba(28, 28, 30, 0.55), transparent);
+    }
+
+    /* Content */
+    .hero-content {
+      position: absolute;
+      z-index: 10;
+      bottom: clamp(3rem, 8vh, 6rem);
+      left: clamp(1.5rem, 7vw, 7rem);
+      max-width: 680px;
+    }
+
+    .hero-eyebrow {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 200;
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.4rem;
+
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    .hero-eyebrow.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+
+    .hero-headline {
+      font-family: 'Gloock', serif;
+      font-weight: 400;
+      font-size: clamp(4rem, 8.5vw, 10rem);
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1;
+    }
+    .headline-line {
+      display: block;
+      overflow: hidden;
+    }
+    .headline-line-inner {
+      display: block;
+      transform: translateY(105%);
+      opacity: 0;
+    }
+    .headline-line-inner.visible {
+      transform: translateY(0);
+      opacity: 1;
+      transition: transform 0.75s var(--ease-out), opacity 0.5s ease;
+    }
+
+    /* Accent word in headline */
+    .headline-accent {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .hero-subtitle {
+      font-family: 'Gloock', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1rem, 1.8vw, 1.35rem);
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+      margin-top: clamp(1rem, 2.5vh, 1.8rem);
+      max-width: 52ch;
+
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .hero-subtitle.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.65s var(--ease-out) 0.1s, transform 0.65s var(--ease-out) 0.1s;
+    }
+
+    /* CTA */
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-top: clamp(1.5rem, 4vh, 2.8rem);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 1rem 2.2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      border: 1px solid var(--accent);
+      transition: background 0.3s ease, color 0.3s ease, transform 0.3s var(--ease-out);
+
+      opacity: 0;
+      transform: translateY(10px) scale(0.97);
+    }
+    .hero-cta.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: opacity 0.6s var(--ease-out),
+                  transform 0.6s var(--ease-out),
+                  background 0.3s ease,
+                  color 0.3s ease;
+    }
+    .hero-cta:hover {
+      background: transparent;
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .hero-cta svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.3s var(--ease-out);
+    }
+    .hero-cta:hover svg { transform: translateX(4px); }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: clamp(1.5rem, 4vh, 3rem);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+
+      opacity: 0;
+    }
+    .scroll-hint.visible {
+      opacity: 1;
+      transition: opacity 0.8s ease;
+    }
+    .scroll-hint-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 200;
+      font-size: 0.58rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .scroll-hint-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--accent-dim), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+      transform-origin: top center;
+    }
+    @keyframes scrollLine {
+      0%   { transform: scaleY(0); opacity: 0; }
+      30%  { opacity: 1; }
+      100% { transform: scaleY(1); opacity: 0; }
+    }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .nav-cta { display: none; }
+      .hero-content {
+        bottom: clamp(4rem, 10vh, 6rem);
+        left: 1.5rem;
+        right: 1.5rem;
+        max-width: none;
+      }
+    }
+    @media (max-width: 480px) {
+      .hero-overlay {
+        background: linear-gradient(
+          180deg,
+          rgba(20, 18, 14, 0.35) 0%,
+          rgba(20, 18, 14, 0.72) 60%,
+          rgba(20, 18, 14, 0.9) 100%
+        );
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER / NAV
+  ═════════════════════════════════════════════ -->
+  <header id="site-header">
+    <a href="#" class="nav-logo" aria-label="Juvilma Inmobiliaria">
+      <!-- Logomark: architectural J monogram -->
+      <svg class="nav-logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="35" height="35" stroke="rgba(232,213,163,0.3)" stroke-width="0.5"/>
+        <path d="M22 8 L22 24 Q22 30 15 30 Q10 30 9 26" stroke="#e8d5a3" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <line x1="14" y1="8" x2="26" y2="8" stroke="#e8d5a3" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="18" y1="16" x2="25" y2="16" stroke="rgba(232,213,163,0.45)" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      <span class="nav-logo-text">
+        <span class="nav-logo-name">Juvilma</span>
+        <span class="nav-logo-sub">Inmobiliaria</span>
+      </span>
+    </a>
+
+    <nav aria-label="Principal">
+      <a href="#">Inicio</a>
+      <a href="propiedades.html">Propiedades</a>
+      <a href="#">Servicios</a>
+      <a href="#">Nosotros</a>
+      <a href="#">Contacto</a>
+    </nav>
+
+    <a href="#" class="nav-cta">Solicitar visita</a>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ═════════════════════════════════════════════ -->
+  <section class="hero" id="hero" aria-label="Hero — Juvilma Inmobiliaria">
+
+    <!-- Video background (two elements for seamless crossfade loop) -->
+    <div class="hero-video-wrap" aria-hidden="true">
+      <video id="vid1" class="hero-vid" muted playsinline preload="auto">
+        <source src="assets/hero-loop.mp4" type="video/mp4">
+      </video>
+      <video id="vid2" class="hero-vid" muted playsinline preload="auto">
+        <source src="assets/hero-loop.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Noise texture (SVG inline filter) -->
+    <svg class="hero-noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <filter id="noise" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#noise)"/>
+    </svg>
+
+    <!-- Gradient overlay -->
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <!-- Hero content -->
+    <div class="hero-content">
+      <span class="hero-eyebrow" id="anim-eyebrow">Madrid &middot; Propiedades de Lujo</span>
+
+      <h1 class="hero-headline" aria-label="Arte de Vivir">
+        <span class="headline-line">
+          <span class="headline-line-inner" id="anim-h1-1">Arte de</span>
+        </span>
+        <span class="headline-line">
+          <span class="headline-line-inner" id="anim-h1-2"><em class="headline-accent">Vivir</em></span>
+        </span>
+      </h1>
+
+      <p class="hero-subtitle" id="anim-subtitle">
+        Las residencias más exclusivas de la capital, seleccionadas para quienes exigen lo mejor.
+      </p>
+
+      <a href="#" class="hero-cta" id="anim-cta">
+        Explorar propiedades
+        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-hint" id="anim-scroll" aria-hidden="true">
+      <span class="scroll-hint-label">Descubrir</span>
+      <div class="scroll-hint-line"></div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS
+  ═════════════════════════════════════════════ -->
+  <script>
+    // ── Seamless video loop (crossfade two video elements) ──
+    (function () {
+      const FADE = 1.4;          // crossfade duration in seconds
+      const v1 = document.getElementById('vid1');
+      const v2 = document.getElementById('vid2');
+      let active = v1;
+      let standby = v2;
+      let transitioning = false;
+
+      function startVideo(el) {
+        return el.play().catch(() => {});
+      }
+
+      // Prime both videos
+      v1.load();
+      v2.load();
+      startVideo(v1);
+
+      function scheduleNextCycle(current) {
+        current.addEventListener('timeupdate', function onUpdate() {
+          if (transitioning) return;
+          const left = current.duration - current.currentTime;
+          if (isNaN(left) || left > FADE) return;
+
+          transitioning = true;
+          current.removeEventListener('timeupdate', onUpdate);
+
+          standby.currentTime = 0;
+          startVideo(standby).then(() => {
+            const t0 = performance.now();
+            const fromEl = active;
+            const toEl = standby;
+
+            function step(now) {
+              const p = Math.min((now - t0) / (FADE * 1000), 1);
+              fromEl.style.opacity = String(1 - p);
+              toEl.style.opacity = String(p);
+              if (p < 1) {
+                requestAnimationFrame(step);
+              } else {
+                fromEl.pause();
+                fromEl.style.opacity = '0';
+                // swap roles
+                active = toEl;
+                standby = fromEl;
+                transitioning = false;
+                scheduleNextCycle(active);
+              }
+            }
+            requestAnimationFrame(step);
+          });
+        });
+      }
+
+      v1.addEventListener('loadedmetadata', function once() {
+        v1.removeEventListener('loadedmetadata', once);
+        scheduleNextCycle(v1);
+      });
+
+      // Fallback: if metadata already loaded
+      if (v1.duration && !isNaN(v1.duration)) {
+        scheduleNextCycle(v1);
+      }
+    })();
+
+
+    // ── Scroll-triggered nav style ──
+    (function () {
+      const header = document.getElementById('site-header');
+      window.addEventListener('scroll', function () {
+        header.classList.toggle('scrolled', window.scrollY > 40);
+      }, { passive: true });
+    })();
+
+
+    // ── Page load entrance animation ──
+    (function () {
+      const header   = document.getElementById('site-header');
+      const eyebrow  = document.getElementById('anim-eyebrow');
+      const h1_1     = document.getElementById('anim-h1-1');
+      const h1_2     = document.getElementById('anim-h1-2');
+      const subtitle = document.getElementById('anim-subtitle');
+      const cta      = document.getElementById('anim-cta');
+      const scroll   = document.getElementById('anim-scroll');
+
+      const sequence = [
+        { el: header,   delay: 80  },
+        { el: eyebrow,  delay: 280 },
+        { el: h1_1,     delay: 460 },
+        { el: h1_2,     delay: 600 },
+        { el: subtitle, delay: 780 },
+        { el: cta,      delay: 940 },
+        { el: scroll,   delay: 1180 },
+      ];
+
+      sequence.forEach(({ el, delay }) => {
+        setTimeout(() => el.classList.add('visible'), delay);
+      });
+    })();
+  </script>
+
+</body>
+</html>
