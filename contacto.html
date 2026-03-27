@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto — Juvilma Inmobiliaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gloock&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #1c1c1e;
+      --surface:      #2c2c2e;
+      --accent:       #e8d5a3;
+      --accent-dim:   rgba(232,213,163,0.38);
+      --accent-faint: rgba(232,213,163,0.06);
+      --text:         #f2f2f7;
+      --text-muted:   #a8a09a;
+      --nav-h:        88px;
+      --ease-out:     cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
+    #site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 4vw, 3.5rem);
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(20,18,14,0.72) 0%, transparent 100%);
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+    #site-header.scrolled {
+      background: rgba(28,28,30,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(232,213,163,0.08);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.75rem;
+      text-decoration: none;
+      opacity: 0; transform: translateY(-8px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .nav-logo.loaded { opacity: 1; transform: translateY(0); }
+    .nav-logo-mark { width: 36px; height: 36px; flex-shrink: 0; }
+    .nav-logo-text { display: flex; flex-direction: column; }
+    .nav-logo-name { font-family: 'Gloock', serif; font-size: 1rem; color: var(--text); line-height: 1.1; letter-spacing: 0.02em; }
+    .nav-logo-sub  { font-family: 'DM Sans', sans-serif; font-weight: 200; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+
+    nav[aria-label="Principal"] {
+      display: flex; gap: clamp(1.5rem, 3vw, 2.8rem);
+      opacity: 0; transform: translateY(-8px);
+      transition: opacity 0.6s var(--ease-out) 0.1s, transform 0.6s var(--ease-out) 0.1s;
+    }
+    nav[aria-label="Principal"].loaded { opacity: 1; transform: translateY(0); }
+
+    nav a {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(242,242,247,0.75); text-decoration: none;
+      position: relative; transition: color 0.2s ease;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 100%; height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s var(--ease-out);
+    }
+    nav a:hover { color: var(--text); }
+    nav a:hover::after, nav a.active-link::after { transform: scaleX(1); }
+    nav a.active-link { color: var(--accent); }
+
+    .nav-cta {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--bg); background: var(--accent);
+      text-decoration: none; padding: 0.6rem 1.3rem; border-radius: 100px;
+      transition: background 0.2s ease, transform 0.2s var(--ease-out);
+      opacity: 0; transform: translateY(-8px);
+    }
+    .nav-cta.loaded { opacity: 1; transform: translateY(0); }
+    .nav-cta:hover { background: var(--text); }
+
+    /* ─────────────────────────────────────────
+       CONTACT HERO — SPLIT SCREEN
+    ───────────────────────────────────────── */
+    #contact-hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* Full-bleed background image */
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url(assets/cat-aticos.png);
+      background-size: cover;
+      background-position: center 30%;
+      z-index: 0;
+      transform: scale(1.06);
+      animation: hero-drift 20s ease-in-out infinite alternate;
+    }
+    @keyframes hero-drift {
+      from { transform: scale(1.06) translateX(0) translateY(0); }
+      to   { transform: scale(1.10) translateX(-1.5%) translateY(-0.8%); }
+    }
+
+    /* Heavy cinematic overlay */
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background:
+        linear-gradient(to right,
+          rgba(16,14,10,0.96) 0%,
+          rgba(16,14,10,0.82) 30%,
+          rgba(16,14,10,0.45) 55%,
+          rgba(16,14,10,0.12) 100%
+        ),
+        linear-gradient(to top,
+          rgba(16,14,10,0.6) 0%,
+          transparent 40%
+        );
+    }
+
+    /* Grain texture for tactility */
+    .hero-grain {
+      position: absolute; inset: 0; z-index: 2;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.045;
+      mix-blend-mode: screen;
+    }
+
+    /* The split container */
+    .hero-split {
+      position: relative; z-index: 3;
+      width: 100%; min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: var(--nav-h) clamp(1.5rem, 4vw, 3.5rem) 0;
+    }
+
+    /* ── LEFT — editorial content ────────── */
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 3rem 4rem 0;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.6rem; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      opacity: 0;
+    }
+    #contact-hero.loaded .hero-eyebrow {
+      opacity: 1;
+      transition: opacity 0.5s ease 0.1s;
+    }
+
+    .hero-headline {
+      font-family: 'Gloock', serif;
+      font-size: clamp(3rem, 5.5vw, 5.8rem);
+      line-height: 0.93;
+      color: var(--text);
+      margin-bottom: 1.8rem;
+    }
+
+    /* Line-by-line clip reveal */
+    .line-wrap {
+      display: block;
+      overflow: hidden;
+      padding-bottom: 0.26em; /* room for descenders (g, p, y) */
+      margin-bottom: -0.19em; /* pull next line up to compensate */
+    }
+    .line-inner {
+      display: block;
+      opacity: 0;
+      transform: translateY(105%);
+      transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out);
+    }
+    #contact-hero.loaded .line-inner { opacity: 1; transform: translateY(0); }
+    .hero-headline em { font-style: italic; color: rgba(242,242,247,0.65); }
+
+    .hero-sub {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.84rem; line-height: 1.72; color: var(--text-muted);
+      max-width: 40ch; margin-bottom: 2.8rem;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.7s var(--ease-out) 0.7s, transform 0.7s var(--ease-out) 0.7s;
+    }
+    #contact-hero.loaded .hero-sub { opacity: 1; transform: translateY(0); }
+
+    /* Contact detail items */
+    .contact-details {
+      display: flex; flex-direction: column; gap: 1.1rem;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.7s var(--ease-out) 0.88s, transform 0.7s var(--ease-out) 0.88s;
+    }
+    #contact-hero.loaded .contact-details { opacity: 1; transform: translateY(0); }
+
+    .contact-detail-item {
+      display: flex; align-items: flex-start; gap: 0.9rem;
+      text-decoration: none; color: inherit;
+      transition: color 0.2s ease;
+    }
+    a.contact-detail-item:hover { color: var(--accent); }
+
+    .detail-icon {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(232,213,163,0.14);
+      border-radius: 8px;
+      color: var(--accent-dim);
+      transition: border-color 0.25s ease, color 0.25s ease;
+    }
+    a.contact-detail-item:hover .detail-icon {
+      border-color: rgba(232,213,163,0.35);
+      color: var(--accent);
+    }
+
+    .detail-text { display: flex; flex-direction: column; gap: 0.1rem; }
+    .detail-label {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .detail-value {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.82rem; color: var(--text);
+      transition: color 0.2s ease;
+    }
+    a.contact-detail-item:hover .detail-value { color: var(--accent); }
+
+    /* ── RIGHT — glass card ──────────────── */
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 0 4rem 2.5rem;
+    }
+
+    /* ── GLASS CARD ──────────────────────── */
+    .glass-card {
+      position: relative;
+      width: 100%; max-width: 520px;
+      border-radius: 20px;
+      overflow: hidden; /* clips spinner to card shape */
+      opacity: 0; transform: translateY(28px) scale(0.97);
+      transition: opacity 0.9s var(--ease-out) 0.5s, transform 0.9s var(--ease-out) 0.5s;
+      animation: card-breathe 5s ease-in-out infinite;
+      box-shadow:
+        0 48px 100px rgba(0,0,0,0.6),
+        0 0 60px rgba(232,213,163,0.03);
+    }
+    #contact-hero.loaded .glass-card { opacity: 1; transform: translateY(0) scale(1); }
+
+    @keyframes card-breathe {
+      0%, 100% { box-shadow: 0 48px 100px rgba(0,0,0,0.6), 0 0 60px rgba(232,213,163,0.03); }
+      50%       { box-shadow: 0 48px 100px rgba(0,0,0,0.6), 0 0 90px rgba(232,213,163,0.09); }
+    }
+
+    /* Spinning conic-gradient border — reliable transform:rotate approach */
+    .glass-border-spin {
+      position: absolute;
+      /* Large enough to cover all corners when rotating */
+      top: 50%; left: 50%;
+      width: 160%; padding-top: 160%;
+      transform: translate(-50%, -50%);
+      background: conic-gradient(
+        from 0deg,
+        transparent 0%,
+        rgba(232,213,163,0.5) 16%,
+        rgba(232,213,163,0.92) 26%,
+        rgba(232,213,163,0.5) 36%,
+        transparent 52%
+      );
+      animation: border-spin-anim 5s linear infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+    @keyframes border-spin-anim {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Glass surface — 1.5px margin exposes the spinner as a visible border */
+    .glass-card-inner {
+      position: relative; z-index: 1;
+      margin: 1.5px;
+      background: rgba(22, 22, 24, 0.60);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border-radius: 19px;
+      padding: clamp(1.8rem, 3vw, 2.6rem);
+    }
+
+    /* ── Card header ─────────────────────── */
+    .card-eyebrow {
+      display: block;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.56rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.7rem;
+    }
+    .card-title {
+      font-family: 'Gloock', serif;
+      font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+      line-height: 1.1; color: var(--text);
+      margin-bottom: 1.8rem;
+    }
+    .card-title em { font-style: italic; color: rgba(242,242,247,0.65); }
+
+    /* ── FORM ────────────────────────────── */
+    .contact-form { display: flex; flex-direction: column; gap: 0; }
+
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem;
+    }
+
+    /* Field wrapper */
+    .form-field {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Inputs & textarea */
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(232,213,163,0.12);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.86rem; line-height: 1.4;
+      padding: 1.5rem 0 0.55rem;
+      outline: none;
+      caret-color: var(--accent);
+      appearance: none; -webkit-appearance: none;
+      transition: border-color 0.3s ease;
+    }
+    .form-field select { cursor: pointer; }
+    .form-field textarea { resize: none; }
+
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus {
+      border-bottom-color: rgba(232,213,163,0.0);
+    }
+
+    /* Option color in dark theme */
+    .form-field select option {
+      background: #1c1c1e;
+      color: var(--text);
+    }
+
+    /* Select chevron */
+    .form-field--select { position: relative; }
+    .select-chevron {
+      position: absolute;
+      right: 0; top: 50%; transform: translateY(-30%);
+      color: var(--text-muted); pointer-events: none;
+      transition: transform 0.3s var(--ease-out);
+    }
+    .form-field--select:focus-within .select-chevron {
+      transform: translateY(-30%) rotate(180deg);
+    }
+
+    /* Floating label */
+    .form-field label {
+      position: absolute; left: 0; top: 1.6rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.82rem; color: var(--text-muted);
+      pointer-events: none;
+      transform-origin: left top;
+      transition: top 0.35s var(--ease-out), font-size 0.35s var(--ease-out),
+                  color 0.35s ease, letter-spacing 0.35s ease, transform 0.35s var(--ease-out);
+    }
+
+    /* Float when input has content (placeholder=" " trick) or is focused */
+    .form-field input:not(:placeholder-shown) ~ label,
+    .form-field input:focus ~ label,
+    .form-field textarea:not(:placeholder-shown) ~ label,
+    .form-field textarea:focus ~ label,
+    .form-field select.has-value ~ label,
+    .form-field select:focus ~ label {
+      top: 0.25rem;
+      font-size: 0.56rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* Animated underline — draws from left on focus */
+    .field-underline {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 1.5px;
+      background: linear-gradient(90deg, var(--accent), rgba(232,213,163,0.6));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.45s var(--ease-out);
+      pointer-events: none;
+    }
+    .form-field:focus-within .field-underline { transform: scaleX(1); }
+
+    /* ── Submit button ────────────────────── */
+    .submit-btn {
+      margin-top: 0.5rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: 'DM Sans', sans-serif; font-weight: 400;
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      border: none; cursor: pointer;
+      padding: 0.95rem 2rem;
+      border-radius: 100px;
+      width: 100%;
+      transition: background 0.25s ease, transform 0.25s var(--ease-out), box-shadow 0.25s ease;
+      will-change: transform;
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: none;
+    }
+    .submit-btn:hover { background: var(--text); }
+    .submit-btn:hover::before {
+      transform: translateX(100%);
+      transition: transform 0.6s var(--ease-out);
+    }
+    .submit-btn:active { transform: scale(0.97); }
+
+    .btn-arrow { display: flex; align-items: center; transition: transform 0.25s var(--ease-out); }
+    .submit-btn:hover .btn-arrow { transform: translateX(4px); }
+
+    /* ── Shimmer on submit ───────────────── */
+    .glass-card-inner.submitting {
+      pointer-events: none;
+    }
+    .glass-card-inner.submitting::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(232,213,163,0.12) 30%,
+        rgba(232,213,163,0.22) 50%,
+        rgba(232,213,163,0.12) 70%,
+        transparent 100%
+      );
+      animation: submit-shimmer 0.9s var(--ease-out) forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+    @keyframes submit-shimmer {
+      from { transform: translateX(-100%); }
+      to   { transform: translateX(100%); }
+    }
+
+    /* ── Success state ───────────────────── */
+    .form-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+    .glass-card-inner.show-success .contact-form { display: none; }
+    .glass-card-inner.show-success .form-success { display: flex; }
+    .glass-card-inner.show-success .card-header { display: none; }
+
+    .success-check {
+      opacity: 0; transform: scale(0.7) rotate(-15deg);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .glass-card-inner.show-success .success-check { opacity: 1; transform: scale(1) rotate(0deg); }
+
+    .success-title {
+      font-family: 'Gloock', serif;
+      font-size: 1.6rem; color: var(--text);
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s var(--ease-out) 0.2s;
+    }
+    .glass-card-inner.show-success .success-title { opacity: 1; transform: translateY(0); }
+
+    .success-sub {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.82rem; line-height: 1.65; color: var(--text-muted);
+      max-width: 34ch;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.5s ease 0.35s, transform 0.5s var(--ease-out) 0.35s;
+    }
+    .glass-card-inner.show-success .success-sub { opacity: 1; transform: translateY(0); }
+
+    /* Scroll indicator */
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 2.2rem; left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.6s ease 1.4s;
+    }
+    #contact-hero.loaded .hero-scroll-hint { opacity: 1; }
+
+    .scroll-hint-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, rgba(232,213,163,0.5), transparent);
+      animation: scroll-line 1.8s ease-in-out infinite;
+    }
+    @keyframes scroll-line {
+      0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
+      45% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      55% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+      100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+    }
+
+    /* ─────────────────────────────────────────
+       MARQUEE STRIP
+    ───────────────────────────────────────── */
+    #marquee-strip {
+      border-top: 1px solid rgba(232,213,163,0.07);
+      border-bottom: 1px solid rgba(232,213,163,0.07);
+      padding: 1.1rem 0;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .marquee-track {
+      display: flex; gap: 0;
+      animation: marquee-scroll 30s linear infinite;
+      width: max-content;
+    }
+    .marquee-item {
+      display: flex; align-items: center; gap: 2.4rem;
+      padding-right: 2.4rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--text-muted); white-space: nowrap;
+    }
+    .marquee-dot {
+      width: 3px; height: 3px; border-radius: 50%;
+      background: var(--accent-dim); flex-shrink: 0;
+    }
+    @keyframes marquee-scroll {
+      to { transform: translateX(-50%); }
+    }
+
+    /* ─────────────────────────────────────────
+       OFFICE INFO SECTION
+    ───────────────────────────────────────── */
+    #office-info {
+      padding: clamp(5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+    }
+
+    .office-header {
+      display: flex; align-items: baseline; gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .office-eyebrow {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0; transform: translateX(-10px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .office-eyebrow.revealed { opacity: 1; transform: translateX(0); }
+    .office-rule {
+      flex: 1; height: 1px;
+      background: rgba(232,213,163,0.09);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.8s var(--ease-out) 0.1s;
+    }
+    .office-rule.revealed { transform: scaleX(1); }
+
+    .office-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: rgba(232,213,163,0.07);
+      border: 1px solid rgba(232,213,163,0.07);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .office-card {
+      background: var(--bg);
+      padding: clamp(1.6rem, 3vw, 2.4rem);
+      display: flex; flex-direction: column; gap: 1.2rem;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .office-card.revealed { opacity: 1; transform: translateY(0); }
+    .office-card:hover { background: rgba(44,44,46,0.5); }
+    .office-card transition { background 0.25s ease; }
+
+    .office-card-icon {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(232,213,163,0.12); border-radius: 10px;
+      color: var(--accent-dim);
+    }
+
+    .office-card-label {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.56rem; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--text-muted); display: block; margin-bottom: 0.3rem;
+    }
+    .office-card-value {
+      font-family: 'Gloock', serif;
+      font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+      line-height: 1.3; color: var(--text);
+    }
+    .office-card-detail {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.78rem; color: var(--text-muted); line-height: 1.55;
+    }
+
+    .office-card-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none;
+      margin-top: auto;
+      transition: gap 0.25s var(--ease-out);
+    }
+    .office-card-link:hover { gap: 0.7rem; }
+
+    /* ─────────────────────────────────────────
+       PRIVACY / DISCRETION STATEMENT
+    ───────────────────────────────────────── */
+    #discretion {
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      display: flex; align-items: center; gap: 2rem;
+    }
+    .discretion-rule {
+      width: 40px; height: 1px;
+      background: rgba(232,213,163,0.25);
+      flex-shrink: 0;
+    }
+    .discretion-text {
+      font-family: 'Gloock', serif;
+      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+      font-style: italic; color: var(--text-muted);
+      line-height: 1.6; max-width: 65ch;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .discretion-text.revealed { opacity: 1; transform: translateY(0); }
+
+    /* ─────────────────────────────────────────
+       CTA SPLIT
+    ───────────────────────────────────────── */
+    #cta-split {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 340px;
+      border-top: 1px solid rgba(232,213,163,0.07);
+    }
+
+    .cta-left {
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      display: flex; flex-direction: column;
+      justify-content: center; gap: 1.2rem;
+      background: var(--surface);
+    }
+
+    .cta-eyebrow {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .cta-eyebrow.revealed { opacity: 1; transform: translateY(0); }
+
+    .cta-headline {
+      font-family: 'Gloock', serif;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      line-height: 1; color: var(--text);
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.7s var(--ease-out) 0.1s, transform 0.7s var(--ease-out) 0.1s;
+    }
+    .cta-headline.revealed { opacity: 1; transform: translateY(0); }
+
+    .cta-sub {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.83rem; line-height: 1.65; color: var(--text-muted);
+      max-width: 38ch;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.6s var(--ease-out) 0.2s, transform 0.6s var(--ease-out) 0.2s;
+    }
+    .cta-sub.revealed { opacity: 1; transform: translateY(0); }
+
+    .cta-buttons {
+      display: flex; align-items: center; gap: 1.4rem; flex-wrap: wrap;
+      margin-top: 0.4rem;
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.6s var(--ease-out) 0.3s, transform 0.6s var(--ease-out) 0.3s;
+    }
+    .cta-buttons.revealed { opacity: 1; transform: translateY(0); }
+
+    .cta-primary {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--bg); background: var(--accent);
+      text-decoration: none; padding: 0.7rem 1.5rem; border-radius: 100px;
+      transition: background 0.2s ease, transform 0.2s var(--ease-out);
+    }
+    .cta-primary:hover { background: var(--text); transform: translateY(-2px); }
+
+    .cta-outline {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      border-bottom: 1px solid rgba(242,242,247,0.18);
+      padding-bottom: 0.15rem;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .cta-outline:hover { color: var(--text); border-color: rgba(242,242,247,0.4); }
+
+    .cta-right {
+      position: relative; overflow: hidden; background: var(--bg);
+    }
+    .cta-right-img {
+      position: absolute; inset: 0;
+      background-image: url(assets/cat-chalets.png);
+      background-size: cover; background-position: center;
+      opacity: 0.35;
+      transition: opacity 0.4s ease, transform 6s var(--ease-out);
+    }
+    #cta-split:hover .cta-right-img { opacity: 0.5; transform: scale(1.03); }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    #site-footer {
+      padding: 2.2rem clamp(1.5rem, 4vw, 3.5rem);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      border-top: 1px solid rgba(232,213,163,0.07);
+      background: var(--surface);
+    }
+    .footer-logo {
+      display: flex; align-items: center; gap: 0.6rem; text-decoration: none;
+    }
+    .footer-logo svg { width: 28px; height: 28px; }
+    .footer-logo-name { font-family: 'Gloock', serif; font-size: 0.88rem; color: var(--text); line-height: 1.1; }
+    .footer-logo-sub  { font-family: 'DM Sans', sans-serif; font-weight: 200; font-size: 0.52rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+    .footer-nav { display: flex; gap: clamp(1rem, 2.5vw, 2rem); }
+    .footer-nav a {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-nav a:hover { color: var(--accent); }
+    .footer-copy {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.62rem; color: rgba(168,160,154,0.5); letter-spacing: 0.06em;
+    }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .hero-split {
+        grid-template-columns: 1fr;
+        padding-bottom: 3rem;
+      }
+      .hero-left {
+        padding: 2rem 0 1.5rem;
+        justify-content: flex-start;
+        padding-top: 2rem;
+      }
+      .hero-right {
+        padding: 0 0 2rem;
+        justify-content: stretch;
+      }
+      .glass-card { max-width: 100%; }
+      .office-cards { grid-template-columns: 1fr; }
+      #cta-split { grid-template-columns: 1fr; }
+      .cta-right { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ───────────────────────────────── -->
+  <header id="site-header">
+    <a href="index.html" class="nav-logo" aria-label="Juvilma Inmobiliaria">
+      <svg class="nav-logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="35" height="35" stroke="rgba(232,213,163,0.3)" stroke-width="0.5"/>
+        <path d="M22 8 L22 24 Q22 30 15 30 Q10 30 9 26" stroke="#e8d5a3" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <line x1="14" y1="8" x2="26" y2="8" stroke="#e8d5a3" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nav-logo-text">
+        <span class="nav-logo-name">Juvilma</span>
+        <span class="nav-logo-sub">Inmobiliaria</span>
+      </span>
+    </a>
+
+    <nav aria-label="Principal">
+      <a href="index.html">Inicio</a>
+      <a href="propiedades.html">Propiedades</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html" class="active-link">Contacto</a>
+    </nav>
+
+    <a href="contacto.html" class="nav-cta">Solicitar visita</a>
+  </header>
+
+  <main>
+
+    <!-- ── CONTACT HERO ──────────────────── -->
+    <section id="contact-hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="hero-grain" aria-hidden="true"></div>
+
+      <div class="hero-split">
+
+        <!-- Left: editorial -->
+        <div class="hero-left">
+          <span class="hero-eyebrow" id="hero-eyebrow">Contacto</span>
+
+          <h1 class="hero-headline">
+            <span class="line-wrap"><span class="line-inner">Hablemos</span></span>
+            <span class="line-wrap"><span class="line-inner">de su <em>próximo</em></span></span>
+            <span class="line-wrap"><span class="line-inner">hogar.</span></span>
+          </h1>
+
+          <p class="hero-sub">Atención exclusiva y absoluta discreción. Nuestros asesores le acompañan en cada paso con la dedicación que merece.</p>
+
+          <div class="contact-details">
+            <a href="tel:+34912345678" class="contact-detail-item">
+              <span class="detail-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M2 2.5C2 2.22 2.22 2 2.5 2h2.88l1.25 3.13-1.5 1.5a10.2 10.2 0 0 0 4.25 4.25l1.5-1.5L14 10.62V13.5c0 .28-.22.5-.5.5C6.27 14 2 9.73 2 2.5Z" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="detail-text">
+                <span class="detail-label">Teléfono</span>
+                <span class="detail-value">+34 91 234 56 78</span>
+              </span>
+            </a>
+
+            <a href="mailto:contacto@juvilma.com" class="contact-detail-item">
+              <span class="detail-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <rect x="1.5" y="3.5" width="13" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+                  <path d="M1.5 5.5l6.5 4 6.5-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="detail-text">
+                <span class="detail-label">Email</span>
+                <span class="detail-value">contacto@juvilma.com</span>
+              </span>
+            </a>
+
+            <div class="contact-detail-item">
+              <span class="detail-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 1.5C5.52 1.5 3.5 3.52 3.5 6c0 3.75 4.5 8.5 4.5 8.5S12.5 9.75 12.5 6C12.5 3.52 10.48 1.5 8 1.5Z" stroke="currentColor" stroke-width="1.3" fill="none"/>
+                  <circle cx="8" cy="6" r="1.5" stroke="currentColor" stroke-width="1.2"/>
+                </svg>
+              </span>
+              <span class="detail-text">
+                <span class="detail-label">Oficina</span>
+                <span class="detail-value">Calle Serrano 45, Madrid</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: glass form card -->
+        <div class="hero-right">
+          <div class="glass-card" id="glass-card">
+            <div class="glass-border-spin" aria-hidden="true"></div>
+            <div class="glass-card-inner" id="glass-card-inner">
+
+              <div class="card-header" id="card-header">
+                <span class="card-eyebrow">Consulta privada</span>
+                <h2 class="card-title">¿En qué podemos <em>ayudarle?</em></h2>
+              </div>
+
+              <form id="contact-form" class="contact-form" novalidate>
+
+                <div class="form-field">
+                  <input type="text" id="f-name" name="nombre" autocomplete="name" required placeholder=" ">
+                  <label for="f-name">Nombre completo</label>
+                  <span class="field-underline"></span>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-field">
+                    <input type="email" id="f-email" name="email" autocomplete="email" required placeholder=" ">
+                    <label for="f-email">Email</label>
+                    <span class="field-underline"></span>
+                  </div>
+                  <div class="form-field">
+                    <input type="tel" id="f-tel" name="telefono" autocomplete="tel" placeholder=" ">
+                    <label for="f-tel">Teléfono</label>
+                    <span class="field-underline"></span>
+                  </div>
+                </div>
+
+                <div class="form-field form-field--select">
+                  <select id="f-service" name="servicio">
+                    <option value="" disabled selected hidden></option>
+                    <option>Compra de inmueble</option>
+                    <option>Venta de inmueble</option>
+                    <option>Alquiler</option>
+                    <option>Inversión</option>
+                    <option>Gestión patrimonial</option>
+                  </select>
+                  <label for="f-service">Tipo de consulta</label>
+                  <span class="field-underline"></span>
+                  <svg class="select-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                    <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+
+                <div class="form-field form-field--textarea">
+                  <textarea id="f-msg" name="mensaje" rows="3" required placeholder=" "></textarea>
+                  <label for="f-msg">Mensaje</label>
+                  <span class="field-underline"></span>
+                </div>
+
+                <button type="submit" id="submit-btn" class="submit-btn">
+                  <span class="btn-label">Enviar consulta</span>
+                  <span class="btn-arrow" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                      <path d="M1 7h12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+
+              </form>
+
+              <!-- Success state -->
+              <div class="form-success" id="form-success" role="status" aria-live="polite">
+                <div class="success-check">
+                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="23" stroke="var(--accent)" stroke-width="1"/>
+                    <path d="M15 24l7 7 11-11" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <p class="success-title">Consulta recibida</p>
+                <p class="success-sub">Un asesor le contactará en las próximas 24 horas con absoluta discreción.</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Animated scroll indicator -->
+      <div class="hero-scroll-hint" aria-hidden="true">
+        <span class="scroll-hint-line"></span>
+      </div>
+
+    </section>
+
+    <!-- ── MARQUEE ─────────────────────────── -->
+    <section id="marquee-strip" aria-hidden="true">
+      <div class="marquee-track">
+        <!-- duplicated for seamless loop -->
+        <span class="marquee-item">Discreción <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Confianza <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Madrid <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Desde 1999 <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Asesoramiento exclusivo <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Propiedades singulares <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Discreción <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Confianza <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Madrid <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Desde 1999 <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Asesoramiento exclusivo <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Propiedades singulares <span class="marquee-dot"></span></span>
+      </div>
+    </section>
+
+    <!-- ── OFFICE INFO ─────────────────────── -->
+    <section id="office-info">
+      <div class="office-header">
+        <span class="office-eyebrow" id="office-eyebrow">Dónde encontrarnos</span>
+        <div class="office-rule" id="office-rule"></div>
+      </div>
+
+      <div class="office-cards">
+
+        <div class="office-card" id="ocard-1">
+          <div class="office-card-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2C7.24 2 5 4.24 5 7c0 4.69 5 11 5 11s5-6.31 5-11c0-2.76-2.24-5-5-5Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+              <circle cx="10" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <div>
+            <span class="office-card-label">Dirección</span>
+            <p class="office-card-value">Calle Serrano, 45<br>28001 Madrid</p>
+          </div>
+          <p class="office-card-detail">Barrio de Salamanca.<br>Metro Velázquez · L4</p>
+          <a href="#" class="office-card-link">Ver mapa <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="office-card" id="ocard-2">
+          <div class="office-card-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M3 3.5C3 3.22 3.22 3 3.5 3h3.5l1.5 3.75-1.8 1.8a12.26 12.26 0 0 0 5.1 5.1l1.8-1.8L17 13.5v3.5c0 .28-.22.5-.5.5C8.49 17.5 3 12.01 3 3.5Z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <span class="office-card-label">Teléfono</span>
+            <p class="office-card-value">+34 91 234 56 78</p>
+          </div>
+          <p class="office-card-detail">Lunes a Viernes<br>9:00 — 19:00 h</p>
+          <a href="tel:+34912345678" class="office-card-link">Llamar ahora <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="office-card" id="ocard-3">
+          <div class="office-card-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <span class="office-card-label">Email</span>
+            <p class="office-card-value">contacto@juvilma.com</p>
+          </div>
+          <p class="office-card-detail">Respuesta garantizada<br>en menos de 24 horas</p>
+          <a href="mailto:contacto@juvilma.com" class="office-card-link">Escribirnos <span aria-hidden="true">→</span></a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── DISCRETION STATEMENT ────────────── -->
+    <section id="discretion">
+      <div class="discretion-rule" aria-hidden="true"></div>
+      <p class="discretion-text" id="discretion-text">
+        "Toda la información que nos confíe se tratará con la máxima reserva.<br>
+        La discreción no es un valor añadido — es la base de cada relación que construimos."
+      </p>
+    </section>
+
+    <!-- ── CTA SPLIT ───────────────────────── -->
+    <section id="cta-split">
+      <div class="cta-left">
+        <span class="cta-eyebrow" id="cta-eyebrow">Siguiente paso</span>
+        <h2 class="cta-headline" id="cta-headline">¿Comenzamos?</h2>
+        <p class="cta-sub" id="cta-sub">Comparta con nosotros qué está buscando.<br>El resto es nuestra responsabilidad.</p>
+        <div class="cta-buttons" id="cta-buttons">
+          <a href="propiedades.html" class="cta-primary">
+            Ver propiedades
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="nosotros.html" class="cta-outline">Conocer el equipo</a>
+        </div>
+      </div>
+      <div class="cta-right">
+        <div class="cta-right-img"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ─────────────────────────── -->
+  <footer id="site-footer">
+    <a href="index.html" class="footer-logo" aria-label="Juvilma Inmobiliaria">
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="35" height="35" stroke="rgba(232,213,163,0.3)" stroke-width="0.5"/>
+        <path d="M22 8 L22 24 Q22 30 15 30 Q10 30 9 26" stroke="#e8d5a3" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <line x1="14" y1="8" x2="26" y2="8" stroke="#e8d5a3" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nav-logo-text">
+        <span class="footer-logo-name">Juvilma</span>
+        <span class="footer-logo-sub">Inmobiliaria</span>
+      </span>
+    </a>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html">Inicio</a>
+      <a href="propiedades.html">Propiedades</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <p class="footer-copy">© 2025 Juvilma Inmobiliaria · Madrid</p>
+  </footer>
+
+  <script>
+  (function () {
+
+    // ── Nav scroll state ─────────────────────────────────────
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // ── Page load sequence ───────────────────────────────────
+    const hero = document.getElementById('contact-hero');
+
+    setTimeout(() => document.querySelector('.nav-logo').classList.add('loaded'), 80);
+    setTimeout(() => document.querySelector('nav[aria-label="Principal"]').classList.add('loaded'), 160);
+    setTimeout(() => document.querySelector('.nav-cta').classList.add('loaded'), 240);
+
+    // Stagger the headline lines
+    const lines = document.querySelectorAll('.line-inner');
+    lines.forEach((line, i) => {
+      line.style.transitionDelay = `${0.28 + i * 0.14}s`;
+    });
+
+    // Trigger hero reveal
+    setTimeout(() => hero.classList.add('loaded'), 60);
+
+    // ── Char-by-char eyebrow reveal ─────────────────────────
+    // Splits the eyebrow text into individual character spans
+    // for a staggered typewriter effect
+    function revealByChars(el, startDelay) {
+      const text = el.textContent;
+      el.innerHTML = '';
+      el.style.opacity = '1'; // override the CSS opacity:0 that we toggled off
+      [...text].forEach((char, i) => {
+        const span = document.createElement('span');
+        span.style.cssText = [
+          'display:inline-block',
+          'opacity:0',
+          'transform:translateY(6px)',
+          `transition:opacity 0.35s ease ${startDelay + i * 0.045}s,transform 0.35s var(--ease-out) ${startDelay + i * 0.045}s`
+        ].join(';');
+        span.textContent = char === ' ' ? '\u00a0' : char;
+        el.appendChild(span);
+      });
+      requestAnimationFrame(() => {
+        el.querySelectorAll('span').forEach(s => {
+          s.style.opacity = '1';
+          s.style.transform = 'translateY(0)';
+        });
+      });
+    }
+
+    setTimeout(() => revealByChars(document.getElementById('hero-eyebrow'), 0), 200);
+
+    // ── Magnetic submit button ───────────────────────────────
+    // Cursor proximity pulls the button towards the pointer
+    const submitBtn = document.getElementById('submit-btn');
+    if (submitBtn) {
+      submitBtn.addEventListener('mouseenter', () => {
+        submitBtn.style.transition = 'transform 0.15s ease-out, background 0.25s ease, box-shadow 0.25s ease';
+      });
+      submitBtn.addEventListener('mousemove', (e) => {
+        const r  = submitBtn.getBoundingClientRect();
+        const cx = r.left + r.width  / 2;
+        const cy = r.top  + r.height / 2;
+        const dx = (e.clientX - cx) * 0.30;
+        const dy = (e.clientY - cy) * 0.30;
+        submitBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+      });
+      submitBtn.addEventListener('mouseleave', () => {
+        submitBtn.style.transition = 'transform 0.55s var(--ease-out), background 0.25s ease, box-shadow 0.25s ease';
+        submitBtn.style.transform  = '';
+      });
+    }
+
+    // ── Select: add .has-value for floating label ────────────
+    const serviceSelect = document.getElementById('f-service');
+    if (serviceSelect) {
+      serviceSelect.addEventListener('change', () => {
+        serviceSelect.classList.toggle('has-value', serviceSelect.value !== '');
+      });
+    }
+
+    // ── Form submission: shimmer → success ───────────────────
+    const form       = document.getElementById('contact-form');
+    const cardInner  = document.getElementById('glass-card-inner');
+
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Shimmer sweep
+        cardInner.classList.add('submitting');
+
+        // After shimmer: show success
+        setTimeout(() => {
+          cardInner.classList.remove('submitting');
+          cardInner.classList.add('show-success');
+
+          // Trigger success animations after class added
+          requestAnimationFrame(() => {
+            document.querySelector('.success-check').style.opacity = '1';
+          });
+        }, 900);
+      });
+    }
+
+    // ── IntersectionObserver for scroll reveals ──────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18 });
+
+    // Office section
+    document.getElementById('office-eyebrow') && observer.observe(document.getElementById('office-eyebrow'));
+    document.getElementById('office-rule')    && observer.observe(document.getElementById('office-rule'));
+
+    document.querySelectorAll('.office-card').forEach((card, i) => {
+      card.style.transitionDelay = `${i * 100}ms`;
+      observer.observe(card);
+    });
+
+    // Discretion
+    document.getElementById('discretion-text') && observer.observe(document.getElementById('discretion-text'));
+
+    // CTA
+    ['cta-eyebrow','cta-headline','cta-sub','cta-buttons'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.transitionDelay = `${i * 90}ms`;
+        observer.observe(el);
+      }
+    });
+
+  })();
+  </script>
+
+</body>
+</html>

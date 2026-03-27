@@ -403,6 +403,796 @@
         );
       }
     }
+
+    /* ═══════════════════════════════════════════
+       §1 TRUST NUMBERS
+    ═══════════════════════════════════════════ */
+    #trust-numbers {
+      background: var(--surface);
+      padding: clamp(4rem, 9vw, 7rem) clamp(1.5rem, 5vw, 4rem);
+      border-bottom: 1px solid rgba(232,213,163,0.07);
+      overflow: hidden;
+    }
+    .numbers-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .stat-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .stat-cell.revealed { opacity: 1; transform: translateY(0); }
+    .stat-cell:nth-child(1) { padding-bottom: 3.5rem; }
+    .stat-cell:nth-child(2) { padding-bottom: 0; }
+    .stat-cell:nth-child(3) { padding-bottom: 1.8rem; }
+    .stat-cell:nth-child(4) { padding-bottom: 4.8rem; }
+    .stat-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.1rem;
+      line-height: 1;
+    }
+    .stat-number {
+      font-family: 'Gloock', serif;
+      font-size: clamp(3.2rem, 6vw, 6.5rem);
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 0.9;
+    }
+    .stat-prefix, .stat-suffix {
+      font-family: 'Gloock', serif;
+      font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+      color: var(--accent);
+      letter-spacing: -0.01em;
+      align-self: flex-end;
+      padding-bottom: 0.1em;
+    }
+    .stat-rule { width: 28px; height: 1px; background: rgba(232,213,163,0.2); margin: 0.2rem 0; }
+    .stat-unit {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+    .stat-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 200;
+      font-size: 0.66rem;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════════
+       §2 MARQUEE
+    ═══════════════════════════════════════════ */
+    #marquee-strip {
+      border-top: 1px solid rgba(232,213,163,0.07);
+      border-bottom: 1px solid rgba(232,213,163,0.07);
+      padding: 1rem 0;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-rtl 32s linear infinite;
+    }
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 2.2rem;
+      padding-right: 2.2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 200;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .marquee-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--accent-dim); flex-shrink: 0; }
+    @keyframes marquee-rtl { to { transform: translateX(-50%); } }
+
+    /* ═══════════════════════════════════════════
+       §3 CINEMA STRIP
+    ═══════════════════════════════════════════ */
+    #cinema-strip {
+      padding-top: clamp(5rem, 9vw, 8rem);
+      position: relative;
+    }
+    .cinema-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      margin-bottom: 2.4rem;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .cinema-header.revealed { opacity: 1; transform: translateY(0); }
+    .cinema-eyebrow {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.6rem; letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--accent); flex-shrink: 0;
+    }
+    .cinema-rule {
+      flex: 1; height: 1px; background: rgba(232,213,163,0.09);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.8s var(--ease-out) 0.15s;
+    }
+    .cinema-header.revealed .cinema-rule { transform: scaleX(1); }
+    .cinema-see-all {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none; flex-shrink: 0;
+      transition: color 0.2s ease;
+    }
+    .cinema-see-all:hover { color: var(--accent); }
+    .cinema-viewport {
+      overflow-x: auto; overflow-y: visible;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      padding: 0 clamp(1.5rem, 5vw, 4rem) clamp(2rem, 4vw, 3.5rem);
+      cursor: none;
+      scroll-snap-type: x proximity;
+    }
+    .cinema-viewport::-webkit-scrollbar { display: none; }
+    .cinema-track { display: flex; gap: 1.4rem; width: max-content; }
+    .cinema-card {
+      position: relative;
+      width: clamp(280px, 32vw, 440px);
+      height: clamp(380px, 48vh, 520px);
+      border-radius: 12px; overflow: hidden;
+      flex-shrink: 0; scroll-snap-align: start;
+      text-decoration: none;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .cinema-card.revealed { opacity: 1; transform: translateY(0); }
+    .cinema-card-img {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 7s var(--ease-out);
+    }
+    .cinema-card:hover .cinema-card-img { transform: scale(1.07); }
+    .cinema-card-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(16,14,10,0.92) 0%, rgba(16,14,10,0.35) 55%, rgba(16,14,10,0.08) 100%);
+    }
+    .cinema-card-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.8rem; z-index: 2;
+      display: flex; flex-direction: column; gap: 0.32rem;
+    }
+    .cinema-card-num {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.56rem; letter-spacing: 0.24em; color: var(--accent-dim);
+    }
+    .cinema-card-name {
+      font-family: 'Gloock', serif;
+      font-size: clamp(1.7rem, 2.8vw, 2.5rem);
+      line-height: 1; color: var(--text);
+      transition: color 0.3s ease;
+    }
+    .cinema-card:hover .cinema-card-name { color: var(--accent); }
+    .cinema-card-location {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.66rem; letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .cinema-card-price {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.78rem; color: var(--accent-dim); margin-top: 0.25rem;
+    }
+    .cinema-card-arrow {
+      position: absolute; top: 1.5rem; right: 1.5rem; z-index: 3;
+      font-size: 1.1rem; color: var(--accent);
+      opacity: 0; transform: translate(-5px, 5px);
+      transition: opacity 0.3s ease, transform 0.3s var(--ease-out);
+    }
+    .cinema-card:hover .cinema-card-arrow { opacity: 1; transform: translate(0,0); }
+    .cinema-cursor {
+      position: fixed; top: 0; left: 0;
+      width: 54px; height: 54px; border-radius: 50%;
+      background: var(--accent); color: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; z-index: 9999;
+      opacity: 0; transform: translate(-50%,-50%) scale(0.5);
+      transition: opacity 0.22s ease, transform 0.22s var(--ease-out);
+      mix-blend-mode: difference;
+    }
+    .cinema-cursor.visible { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+
+    /* ═══════════════════════════════════════════
+       §4 BRAND STATEMENT
+    ═══════════════════════════════════════════ */
+    #brand-statement {
+      position: relative; min-height: 100svh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .brand-bg {
+      position: absolute; inset: 0;
+      background-image: url(assets/cat-aticos.png);
+      background-size: cover; background-position: center 30%;
+      z-index: 0; transform: scale(1.04);
+      transition: transform 14s var(--ease-out);
+    }
+    #brand-statement.in-view .brand-bg { transform: scale(1.0); }
+    .brand-overlay { position: absolute; inset: 0; z-index: 1; background: rgba(14,12,8,0.89); }
+    .brand-content {
+      position: relative; z-index: 2; text-align: center;
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 10vw, 10rem);
+      max-width: 960px;
+    }
+    .brand-quote {
+      font-family: 'Gloock', serif; font-style: italic;
+      font-size: clamp(1.7rem, 3.2vw, 3.8rem);
+      line-height: 1.25; color: var(--text);
+      letter-spacing: -0.01em; margin-bottom: 2rem;
+    }
+    .brand-rule {
+      width: 40px; height: 1px; background: var(--accent);
+      margin: 0 auto 1.5rem;
+      opacity: 0; transform: scaleX(0);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s var(--ease-out) 0.2s;
+    }
+    #brand-statement.in-view .brand-rule { opacity: 1; transform: scaleX(1); }
+    .brand-attribution {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.64rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.5s ease 0.4s, transform 0.5s var(--ease-out) 0.4s;
+    }
+    #brand-statement.in-view .brand-attribution { opacity: 1; transform: translateY(0); }
+    .scramble-word { display: inline; }
+
+    /* ═══════════════════════════════════════════
+       §5 SERVICES TEASER
+    ═══════════════════════════════════════════ */
+    #services-teaser { padding: clamp(5rem, 9vw, 8rem) 0 0; }
+    .services-teaser-header {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 0 clamp(1.5rem, 5vw, 4rem); margin-bottom: 1.2rem;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .services-teaser-header.revealed { opacity: 1; transform: translateY(0); }
+    .teaser-eyebrow {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); flex-shrink: 0;
+    }
+    .teaser-rule { flex: 1; height: 1px; background: rgba(232,213,163,0.09); }
+    .teaser-rows { list-style: none; }
+    .teaser-row {
+      border-bottom: 1px solid rgba(232,213,163,0.09);
+      border-radius: 6px; overflow: hidden; cursor: default;
+      transition: background 0.45s var(--ease-out), opacity 0.35s ease,
+                  transform 0.6s var(--ease-out);
+      opacity: 0; transform: translateY(25px);
+    }
+    .teaser-rows li:first-child { border-top: 1px solid rgba(232,213,163,0.09); }
+    .teaser-row.revealed { opacity: 1; transform: translateY(0); }
+    .teaser-rows.has-active .teaser-row.revealed:not(.expanded) { opacity: 0.38; }
+    .teaser-row.expanded { background: var(--surface); }
+
+    .row-header {
+      display: flex; align-items: center; gap: 1.4rem;
+      padding: 1.8rem clamp(1.5rem, 5vw, 4rem);
+    }
+    .teaser-num {
+      font-family: 'Gloock', serif; font-size: 0.78rem;
+      color: var(--text-muted); opacity: 0.35; flex-shrink: 0;
+      letter-spacing: 0.05em; transition: opacity 0.35s ease;
+    }
+    .teaser-row.expanded .teaser-num { opacity: 0.6; }
+    .teaser-name {
+      font-family: 'Gloock', serif; font-size: clamp(1.6rem, 2.8vw, 3rem);
+      color: var(--text); flex: 1; line-height: 1; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+      transition: color 0.35s var(--ease-out);
+    }
+    .teaser-row.expanded .teaser-name,
+    .teaser-row:hover .teaser-name { color: var(--accent); }
+    .teaser-arrow {
+      font-size: 1.1rem; color: var(--accent-dim); flex-shrink: 0;
+      transition: transform 0.4s var(--ease-out), color 0.35s ease;
+    }
+    .teaser-row.expanded .teaser-arrow { transform: rotate(-45deg) translateX(2px); color: var(--accent); }
+
+    .row-body-wrap {
+      display: grid; grid-template-rows: 0fr;
+      transition: grid-template-rows 0.55s var(--ease-out);
+    }
+    .teaser-row.expanded .row-body-wrap { grid-template-rows: 1fr; }
+    .row-body {
+      overflow: hidden; min-height: 0;
+      display: grid; grid-template-columns: 56fr 44fr; gap: 0 2rem;
+    }
+    .row-body-left {
+      padding: 0 0 2rem clamp(1.5rem, 5vw, 4rem);
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .row-divider {
+      width: 40px; height: 1px; background: rgba(232,213,163,0.25);
+      opacity: 0; transition: opacity 0.4s ease 0.15s;
+    }
+    .teaser-row.expanded .row-divider { opacity: 1; }
+    .row-desc {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.83rem; line-height: 1.68; color: var(--text-muted);
+      max-width: 44ch; opacity: 0; transform: translateY(10px);
+      transition: opacity 0.45s ease 0.18s, transform 0.45s var(--ease-out) 0.18s;
+    }
+    .teaser-row.expanded .row-desc { opacity: 1; transform: translateY(0); }
+    .row-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none;
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.4s ease 0.28s, transform 0.4s var(--ease-out) 0.28s;
+    }
+    .teaser-row.expanded .row-cta { opacity: 1; transform: translateY(0); }
+    .row-cta span { transition: transform 0.25s var(--ease-out); }
+    .row-cta:hover span { transform: translateX(4px); }
+    .row-body-right {
+      padding: 0 clamp(1.5rem, 5vw, 4rem) 2rem 0;
+      display: flex; align-items: flex-start;
+    }
+    .row-img {
+      width: 100%; height: 200px; object-fit: cover; border-radius: 8px;
+      clip-path: inset(0 100% 0 0 round 8px); display: block;
+      transition: clip-path 0.65s var(--ease-out) 0.08s;
+    }
+    .teaser-row.expanded .row-img { clip-path: inset(0 0% 0 0 round 8px); }
+
+    .teaser-footer {
+      padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 5vw, 4rem);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+    }
+    .teaser-footer.revealed { opacity: 1; transform: translateY(0); }
+    .teaser-all-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none;
+      transition: gap 0.25s var(--ease-out);
+    }
+    .teaser-all-link:hover { gap: 0.85rem; }
+
+    /* ═══════════════════════════════════════════
+       §6 GLASS TESTIMONIALS
+    ═══════════════════════════════════════════ */
+    #testimonials {
+      position: relative; min-height: 80vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem);
+    }
+    .testi-bg {
+      position: absolute; inset: 0;
+      background-image: url(assets/cat-chalets.png);
+      background-size: cover; background-position: center 35%;
+      z-index: 0;
+      animation: testi-drift 18s ease-in-out infinite alternate;
+    }
+    @keyframes testi-drift {
+      from { transform: scale(1.04) translateX(0); }
+      to   { transform: scale(1.09) translateX(-1.5%); }
+    }
+    .testi-overlay { position: absolute; inset: 0; z-index: 1; background: rgba(14,12,8,0.87); }
+    .testi-card-wrap { position: relative; z-index: 2; width: 100%; max-width: 780px; }
+    .testi-glass {
+      position: relative; border-radius: 20px; overflow: hidden;
+      animation: testi-breathe 5s ease-in-out infinite;
+    }
+    @keyframes testi-breathe {
+      0%,100% { box-shadow: 0 40px 90px rgba(0,0,0,0.6), 0 0 60px rgba(232,213,163,0.03); }
+      50%      { box-shadow: 0 40px 90px rgba(0,0,0,0.6), 0 0 80px rgba(232,213,163,0.09); }
+    }
+    .testi-border-spin {
+      position: absolute; top: 50%; left: 50%;
+      width: 160%; padding-top: 160%;
+      transform: translate(-50%, -50%);
+      background: conic-gradient(from 0deg, transparent 0%, rgba(232,213,163,0.5) 16%, rgba(232,213,163,0.92) 26%, rgba(232,213,163,0.5) 36%, transparent 52%);
+      animation: spin-testi 5s linear infinite; z-index: 0; pointer-events: none;
+    }
+    @keyframes spin-testi { to { transform: translate(-50%,-50%) rotate(360deg); } }
+    .testi-inner {
+      position: relative; z-index: 1; margin: 1.5px;
+      background: rgba(22,22,24,0.60);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-radius: 19px;
+      padding: clamp(2rem, 3.5vw, 2.8rem);
+    }
+    .testi-layout { display: flex; gap: 2.2rem; align-items: flex-start; }
+    .testi-portrait-wrap { flex-shrink: 0; }
+    .testi-portrait {
+      width: 140px; height: 140px; border-radius: 12px;
+      background: rgba(26,24,20,0.9);
+      border: 1px solid rgba(232,213,163,0.18);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      transition: opacity 0.45s ease;
+    }
+    .testi-portrait::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 110%, rgba(232,213,163,0.09) 0%, transparent 65%);
+    }
+    .testi-initials {
+      font-family: 'Gloock', serif; font-style: italic;
+      font-size: 2rem; color: var(--accent-dim);
+      position: relative; z-index: 1;
+      transition: opacity 0.35s ease;
+    }
+    .testi-portrait.fading { opacity: 0.15; }
+    .testi-right { flex: 1; min-width: 0; }
+    .testi-quote-wrap { min-height: 100px; display: flex; align-items: center; }
+    .testi-quote {
+      font-family: 'Gloock', serif; font-style: italic;
+      font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+      line-height: 1.55; color: var(--text);
+      transition: opacity 0.55s var(--ease-out), transform 0.65s var(--ease-out);
+    }
+    .testi-quote.slide-out-left  { opacity: 0; transform: translateX(-14px); }
+    .testi-quote.slide-out-right { opacity: 0; transform: translateX(14px); }
+    .testi-quote.slide-in-left   { opacity: 0; transform: translateX(14px); }
+    .testi-quote.slide-in-right  { opacity: 0; transform: translateX(-14px); }
+    .testi-quote.active          { opacity: 1; transform: translateX(0); }
+    .testi-meta {
+      margin-top: 1.8rem; padding-top: 1.1rem;
+      border-top: 1px solid rgba(232,213,163,0.1);
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .testi-attribution {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-muted);
+      transition: opacity 0.45s ease;
+    }
+    .testi-attribution.fading { opacity: 0; }
+    .testi-controls { display: flex; gap: 0.7rem; flex-shrink: 0; }
+    .testi-btn {
+      width: 34px; height: 34px; border-radius: 100px;
+      background: rgba(232,213,163,0.07);
+      border: 1px solid rgba(232,213,163,0.15);
+      color: var(--accent-dim); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.88rem; font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .testi-btn:hover { background: rgba(232,213,163,0.13); border-color: rgba(232,213,163,0.3); color: var(--accent); }
+    .testi-progress { margin-top: 1.1rem; height: 1.5px; background: rgba(232,213,163,0.1); border-radius: 100px; overflow: hidden; }
+    .testi-progress-bar { height: 100%; background: var(--accent); width: 0%; border-radius: 100px; }
+    .testi-progress-bar.running { width: 100%; transition: width 7s linear; }
+
+    /* ═══════════════════════════════════════════
+       §7 NEIGHBORHOOD GRID
+    ═══════════════════════════════════════════ */
+    #neighborhoods { padding: clamp(5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem); }
+    .nbhd-header {
+      display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2.2rem;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .nbhd-header.revealed { opacity: 1; transform: translateY(0); }
+    .nbhd-eyebrow {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); flex-shrink: 0;
+    }
+    .nbhd-rule {
+      flex: 1; height: 1px; background: rgba(232,213,163,0.09);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.8s var(--ease-out) 0.1s;
+    }
+    .nbhd-header.revealed .nbhd-rule { transform: scaleX(1); }
+    .nbhd-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr 1fr;
+      grid-template-rows: 280px 210px;
+      gap: 3px;
+      border-radius: 12px; overflow: hidden;
+    }
+    .nbhd-tile {
+      position: relative; overflow: hidden;
+      cursor: pointer; text-decoration: none; display: block;
+      opacity: 0; transform: scale(0.96);
+      transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
+    }
+    .nbhd-tile.revealed { opacity: 1; transform: scale(1); }
+    .nbhd-tile:nth-child(1) { grid-row: 1 / 3; }
+    .nbhd-tile-img {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 6s var(--ease-out), filter 0.4s ease;
+      filter: brightness(0.65);
+    }
+    .nbhd-tile:hover .nbhd-tile-img { transform: scale(1.07); filter: brightness(0.88); }
+    .nbhd-tile-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(16,14,10,0.88) 0%, rgba(16,14,10,0.15) 65%, transparent 100%);
+      transition: background 0.4s ease;
+    }
+    .nbhd-tile-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.3rem 1.5rem; z-index: 2;
+    }
+    .nbhd-tile-count {
+      display: block;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.54rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.35rem;
+    }
+    .nbhd-tile-name {
+      font-family: 'Gloock', serif;
+      font-size: clamp(1rem, 1.8vw, 1.55rem);
+      line-height: 1.1; color: var(--text);
+      transition: color 0.3s ease;
+    }
+    .nbhd-tile:hover .nbhd-tile-name { color: var(--accent); }
+    .nbhd-tile-link {
+      display: inline-block; margin-top: 0.45rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent-dim);
+      opacity: 0; transform: translateY(6px);
+      transition: opacity 0.3s ease, transform 0.3s var(--ease-out);
+    }
+    .nbhd-tile:hover .nbhd-tile-link { opacity: 1; transform: translateY(0); }
+
+    /* ═══════════════════════════════════════════
+       §8 CTA FINALE
+    ═══════════════════════════════════════════ */
+    #cta-finale {
+      position: relative; min-height: 100svh;
+      display: flex; align-items: center;
+      overflow: hidden;
+      padding: clamp(6rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+    }
+
+    /* Full-bleed property image background */
+    .cta-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background-image: url(assets/cat-chalets.png);
+      background-size: cover; background-position: center 40%;
+      animation: cta-drift 22s ease-in-out infinite alternate;
+    }
+    @keyframes cta-drift {
+      from { transform: scale(1.04) translateX(0); }
+      to   { transform: scale(1.09) translateX(-1%); }
+    }
+    .cta-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(
+        105deg,
+        rgba(14,12,8,0.92) 0%,
+        rgba(14,12,8,0.82) 45%,
+        rgba(14,12,8,0.55) 100%
+      );
+    }
+    /* Subtle radial accent glow behind left content */
+    .cta-overlay::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 55% 60% at 28% 55%, rgba(232,213,163,0.055) 0%, transparent 65%);
+    }
+
+    /* Two-column layout */
+    .cta-layout {
+      position: relative; z-index: 2;
+      display: flex; align-items: center;
+      gap: clamp(2rem, 6vw, 6rem);
+      width: 100%; max-width: 1400px; margin: 0 auto;
+    }
+
+    /* Left column */
+    .cta-left {
+      flex: 0 0 55%; min-width: 0;
+      display: flex; flex-direction: column; gap: 1.6rem;
+    }
+    .cta-eyebrow {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.6rem; letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--accent);
+      display: flex; align-items: center; gap: 1rem;
+      opacity: 0; transition: opacity 0.7s var(--ease-out);
+    }
+    .cta-eyebrow.revealed { opacity: 1; }
+    .cta-eyebrow-rule { flex: 0 0 32px; height: 1px; background: var(--accent); }
+    .cta-headline {
+      font-family: 'Gloock', serif;
+      font-size: clamp(3.2rem, 6.5vw, 8rem);
+      line-height: 0.92; color: var(--text);
+      letter-spacing: -0.025em;
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.85s var(--ease-out) 0.1s, transform 0.85s var(--ease-out) 0.1s;
+    }
+    .cta-headline.revealed { opacity: 1; transform: translateY(0); }
+    .cta-headline em { font-style: italic; color: var(--accent); }
+    .cta-sub {
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.86rem; line-height: 1.72; color: var(--text-muted);
+      max-width: 44ch;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.7s var(--ease-out) 0.28s, transform 0.7s var(--ease-out) 0.28s;
+    }
+    .cta-sub.revealed { opacity: 1; transform: translateY(0); }
+    .cta-buttons {
+      display: flex; align-items: center; gap: 1.8rem; flex-wrap: wrap;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.7s var(--ease-out) 0.42s, transform 0.7s var(--ease-out) 0.42s;
+    }
+    .cta-buttons.revealed { opacity: 1; transform: translateY(0); }
+    .btn-cta-primary {
+      display: inline-flex; align-items: center; gap: 0.65rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--bg); background: var(--accent);
+      text-decoration: none; padding: 1rem 2.2rem; border-radius: 100px;
+      transition: background 0.28s ease, transform 0.28s var(--ease-out), box-shadow 0.28s ease;
+    }
+    .btn-cta-primary:hover {
+      background: var(--text); transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+    }
+    .btn-cta-secondary {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(242,242,247,0.55); text-decoration: none;
+      border-bottom: 1px solid rgba(242,242,247,0.18); padding-bottom: 0.18rem;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-cta-secondary:hover { color: var(--text); border-color: rgba(242,242,247,0.4); }
+
+    /* Ghost "25" watermark — left column bg */
+    .cta-ghost-num {
+      position: absolute; left: -0.06em; bottom: -0.1em;
+      font-family: 'Gloock', serif;
+      font-size: clamp(14rem, 26vw, 34rem);
+      color: rgba(232,213,163,0.045); line-height: 1;
+      user-select: none; pointer-events: none; z-index: 1;
+      letter-spacing: -0.04em; will-change: transform;
+    }
+
+    /* Right column — glass stats card */
+    .cta-right {
+      flex: 0 0 45%; min-width: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding-right: clamp(1rem, 2vw, 2rem);
+      opacity: 0; transform: translateX(30px);
+      transition: opacity 0.85s var(--ease-out) 0.3s, transform 0.85s var(--ease-out) 0.3s;
+    }
+    .cta-right.revealed { opacity: 1; transform: translateX(0); }
+    .cta-stats-glass {
+      position: relative; border-radius: 20px; overflow: hidden;
+      width: 100%; max-width: 360px;
+      animation: cta-glass-breathe 5.5s ease-in-out infinite;
+    }
+    @keyframes cta-glass-breathe {
+      0%,100% { box-shadow: 0 32px 80px rgba(0,0,0,0.55), 0 0 50px rgba(232,213,163,0.03); }
+      50%      { box-shadow: 0 32px 80px rgba(0,0,0,0.55), 0 0 70px rgba(232,213,163,0.10); }
+    }
+    .cta-glass-spin {
+      position: absolute; top: 50%; left: 50%;
+      width: 160%; padding-top: 160%;
+      transform: translate(-50%, -50%);
+      background: conic-gradient(from 0deg, transparent 0%, rgba(232,213,163,0.45) 16%, rgba(232,213,163,0.88) 26%, rgba(232,213,163,0.45) 36%, transparent 52%);
+      animation: cta-spin-border 6s linear infinite; z-index: 0; pointer-events: none;
+    }
+    @keyframes cta-spin-border { to { transform: translate(-50%,-50%) rotate(360deg); } }
+    .cta-glass-inner {
+      position: relative; z-index: 1; margin: 1.5px;
+      background: rgba(20,18,14,0.62);
+      backdrop-filter: blur(26px) saturate(180%);
+      -webkit-backdrop-filter: blur(26px) saturate(180%);
+      border-radius: 19px;
+      padding: 2.4rem 2rem;
+    }
+    .cta-glass-label {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.56rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent-dim); margin-bottom: 2rem; display: block;
+    }
+    .cta-stats-list { display: flex; flex-direction: column; gap: 0; }
+    .cta-stat-item {
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(232,213,163,0.08);
+      display: flex; align-items: baseline; gap: 0.75rem;
+    }
+    .cta-stat-item:first-child { padding-top: 0; }
+    .cta-stat-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .cta-stat-num {
+      font-family: 'Gloock', serif;
+      font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+      color: var(--text); line-height: 1; letter-spacing: -0.02em;
+    }
+    .cta-stat-suffix {
+      font-family: 'Gloock', serif;
+      font-size: clamp(1rem, 1.5vw, 1.4rem);
+      color: var(--accent); line-height: 1;
+    }
+    .cta-stat-label {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-muted); margin-left: auto;
+      text-align: right; line-height: 1.3;
+    }
+    .cta-glass-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin-top: 2rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.64rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none;
+      transition: gap 0.25s var(--ease-out), color 0.2s ease;
+    }
+    .cta-glass-cta:hover { gap: 0.9rem; color: var(--text); }
+    .cta-glass-cta-rule { flex: 1; height: 1px; background: rgba(232,213,163,0.15); margin-top: 1.2rem; }
+
+    @media (max-width: 900px) {
+      .cta-layout { flex-direction: column; }
+      .cta-left { flex: none; width: 100%; }
+      .cta-right { flex: none; width: 100%; justify-content: center; }
+      .cta-stats-glass { max-width: 100%; }
+      .cta-ghost-num { font-size: clamp(10rem, 38vw, 22rem); opacity: 0.035; }
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    #site-footer {
+      padding: 2.2rem clamp(1.5rem, 4vw, 3.5rem);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      border-top: 1px solid rgba(232,213,163,0.07);
+      background: var(--surface);
+    }
+    .footer-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    .footer-logo svg { width: 28px; height: 28px; }
+    .footer-logo-name { font-family: 'Gloock', serif; font-size: 0.88rem; color: var(--text); line-height: 1.1; }
+    .footer-logo-sub  { font-family: 'DM Sans', sans-serif; font-weight: 200; font-size: 0.52rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+    .footer-nav { display: flex; gap: clamp(1rem, 2.5vw, 2rem); }
+    .footer-nav a {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none; transition: color 0.2s ease;
+    }
+    .footer-nav a:hover { color: var(--accent); }
+    .footer-copy { font-family: 'DM Sans', sans-serif; font-weight: 200; font-size: 0.6rem; color: rgba(168,160,154,0.5); letter-spacing: 0.06em; }
+
+    @media (max-width: 960px) {
+      .row-body { grid-template-columns: 1fr; }
+      .row-body-right { display: none; }
+    }
+    @media (max-width: 900px) {
+      .numbers-grid { flex-wrap: wrap; gap: 2rem 3rem; }
+      .stat-cell:nth-child(n) { padding-bottom: 0; }
+      .nbhd-grid { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 200px); }
+      .nbhd-tile:nth-child(1) { grid-row: auto; }
+      .testi-layout { flex-direction: column; }
+      .testi-portrait { width: 80px; height: 80px; }
+      .testi-initials { font-size: 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      .nbhd-grid { grid-template-columns: 1fr; grid-template-rows: repeat(5, 170px); }
+      .cinema-card { width: 82vw; }
+      .footer-nav { display: none; }
+      .testi-portrait { width: 64px; height: 64px; }
+      .testi-initials { font-size: 1.2rem; }
+    }
   </style>
 </head>
 <body>
@@ -426,14 +1216,14 @@
     </a>
 
     <nav aria-label="Principal">
-      <a href="#">Inicio</a>
+      <a href="index.html" class="active-link">Inicio</a>
       <a href="propiedades.html">Propiedades</a>
-      <a href="#">Servicios</a>
-      <a href="#">Nosotros</a>
-      <a href="#">Contacto</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
     </nav>
 
-    <a href="#" class="nav-cta">Solicitar visita</a>
+    <a href="contacto.html" class="nav-cta">Solicitar visita</a>
   </header>
 
 
@@ -496,6 +1286,485 @@
     </div>
 
   </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       §1 TRUST NUMBERS
+  ═════════════════════════════════════════════ -->
+  <section id="trust-numbers" aria-label="Números — Juvilma">
+    <div class="numbers-grid">
+      <div class="stat-cell">
+        <div class="stat-value-row">
+          <span class="stat-number" data-target="25" data-suffix="">0</span>
+          <span class="stat-suffix">+</span>
+        </div>
+        <div class="stat-rule"></div>
+        <span class="stat-unit">Años</span>
+        <span class="stat-desc">de trayectoria</span>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value-row">
+          <span class="stat-prefix">+</span>
+          <span class="stat-number" data-target="200" data-suffix="">0</span>
+        </div>
+        <div class="stat-rule"></div>
+        <span class="stat-unit">Operaciones</span>
+        <span class="stat-desc">cerradas con éxito</span>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value-row">
+          <span class="stat-prefix">€</span>
+          <span class="stat-number" data-target="400" data-suffix="">0</span>
+          <span class="stat-suffix">M</span>
+        </div>
+        <div class="stat-rule"></div>
+        <span class="stat-unit">En activos</span>
+        <span class="stat-desc">gestionados</span>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value-row">
+          <span class="stat-number" data-target="100" data-suffix="">0</span>
+          <span class="stat-suffix">%</span>
+        </div>
+        <div class="stat-rule"></div>
+        <span class="stat-unit">Satisfacción</span>
+        <span class="stat-desc">de nuestros clientes</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       §2 MARQUEE STRIP
+  ═════════════════════════════════════════════ -->
+  <div id="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Discreción <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Excelencia <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Madrid <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Desde 1999 <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Confianza <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Patrimonio <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Lujo <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Discreción <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Excelencia <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Madrid <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Desde 1999 <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Confianza <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Patrimonio <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Lujo <span class="marquee-dot"></span></span>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       §3 PROPERTY CINEMA STRIP
+  ═════════════════════════════════════════════ -->
+  <section id="cinema-strip" aria-label="Propiedades destacadas">
+    <div class="cinema-header" id="cinema-header">
+      <span class="cinema-eyebrow">Propiedades</span>
+      <div class="cinema-rule"></div>
+      <a href="listings.html" class="cinema-see-all">Ver todas →</a>
+    </div>
+
+    <div class="cinema-viewport" id="cinema-viewport">
+      <div class="cinema-track" id="cinema-track">
+
+        <a href="listings.html?cat=aticos" class="cinema-card" aria-label="Áticos de lujo">
+          <div class="cinema-card-img" style="background-image:url(assets/cat-aticos.png)"></div>
+          <div class="cinema-card-overlay"></div>
+          <div class="cinema-card-content">
+            <span class="cinema-card-num">01</span>
+            <span class="cinema-card-name">Áticos</span>
+            <span class="cinema-card-location">Salamanca · Retiro</span>
+            <span class="cinema-card-price">Desde 1.200.000 €</span>
+          </div>
+          <span class="cinema-card-arrow">→</span>
+        </a>
+
+        <a href="listings.html?cat=chalets" class="cinema-card" aria-label="Chalets exclusivos">
+          <div class="cinema-card-img" style="background-image:url(assets/cat-chalets.png)"></div>
+          <div class="cinema-card-overlay"></div>
+          <div class="cinema-card-content">
+            <span class="cinema-card-num">02</span>
+            <span class="cinema-card-name">Chalets</span>
+            <span class="cinema-card-location">La Moraleja · Pozuelo</span>
+            <span class="cinema-card-price">Desde 2.800.000 €</span>
+          </div>
+          <span class="cinema-card-arrow">→</span>
+        </a>
+
+        <a href="listings.html?cat=pisos" class="cinema-card" aria-label="Pisos singulares">
+          <div class="cinema-card-img" style="background-image:url(assets/cat-pisos.png)"></div>
+          <div class="cinema-card-overlay"></div>
+          <div class="cinema-card-content">
+            <span class="cinema-card-num">03</span>
+            <span class="cinema-card-name">Pisos</span>
+            <span class="cinema-card-location">Chamberí · Almagro</span>
+            <span class="cinema-card-price">Desde 650.000 €</span>
+          </div>
+          <span class="cinema-card-arrow">→</span>
+        </a>
+
+        <a href="listings.html?cat=casas" class="cinema-card" aria-label="Casas con carácter">
+          <div class="cinema-card-img" style="background-image:url(assets/cat-casas.png)"></div>
+          <div class="cinema-card-overlay"></div>
+          <div class="cinema-card-content">
+            <span class="cinema-card-num">04</span>
+            <span class="cinema-card-name">Casas</span>
+            <span class="cinema-card-location">Centro · Malasaña</span>
+            <span class="cinema-card-price">Desde 890.000 €</span>
+          </div>
+          <span class="cinema-card-arrow">→</span>
+        </a>
+
+        <a href="listings.html?cat=locales" class="cinema-card" aria-label="Locales e inversión">
+          <div class="cinema-card-img" style="background-image:url(assets/cat-locales.png)"></div>
+          <div class="cinema-card-overlay"></div>
+          <div class="cinema-card-content">
+            <span class="cinema-card-num">05</span>
+            <span class="cinema-card-name">Inversión</span>
+            <span class="cinema-card-location">Madrid · Gran Vía</span>
+            <span class="cinema-card-price">Desde 320.000 €</span>
+          </div>
+          <span class="cinema-card-arrow">→</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Custom drag cursor -->
+    <div class="cinema-cursor" id="cinema-cursor" aria-hidden="true">⟷</div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       §4 BRAND STATEMENT
+  ═════════════════════════════════════════════ -->
+  <section id="brand-statement" aria-label="Nuestra filosofía">
+    <div class="brand-bg"></div>
+    <div class="brand-overlay"></div>
+    <div class="brand-content">
+      <blockquote class="brand-quote" id="brand-quote">
+        <span class="scramble-word">"No</span>
+        <span class="scramble-word">vendemos</span>
+        <span class="scramble-word">pisos.</span>
+        <span class="scramble-word">Hacemos</span>
+        <span class="scramble-word">posible</span>
+        <span class="scramble-word">el</span>
+        <span class="scramble-word">modo</span>
+        <span class="scramble-word">de</span>
+        <span class="scramble-word">vida</span>
+        <span class="scramble-word">que</span>
+        <span class="scramble-word">usted</span>
+        <span class="scramble-word">merece."</span>
+      </blockquote>
+      <div class="brand-rule"></div>
+      <p class="brand-attribution">— Carlos Vega &nbsp;·&nbsp; Fundador &nbsp;·&nbsp; 1999</p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       §5 SERVICES TEASER
+  ═════════════════════════════════════════════ -->
+  <section id="services-teaser" aria-label="Nuestros servicios">
+    <div class="services-teaser-header" id="teaser-header">
+      <span class="teaser-eyebrow">Servicios</span>
+      <div class="teaser-rule"></div>
+    </div>
+    <ul class="teaser-rows">
+      <li class="teaser-row">
+        <div class="row-header">
+          <span class="teaser-num">01</span>
+          <span class="teaser-name">Compra de Inmuebles</span>
+          <span class="teaser-arrow">→</span>
+        </div>
+        <div class="row-body-wrap">
+          <div class="row-body">
+            <div class="row-body-left">
+              <div class="row-divider"></div>
+              <p class="row-desc"></p>
+              <a href="servicios.html" class="row-cta">Ver servicio <span>→</span></a>
+            </div>
+            <div class="row-body-right"><img src="" alt="" class="row-img" loading="lazy"></div>
+          </div>
+        </div>
+      </li>
+      <li class="teaser-row">
+        <div class="row-header">
+          <span class="teaser-num">02</span>
+          <span class="teaser-name">Venta de Propiedades</span>
+          <span class="teaser-arrow">→</span>
+        </div>
+        <div class="row-body-wrap">
+          <div class="row-body">
+            <div class="row-body-left">
+              <div class="row-divider"></div>
+              <p class="row-desc"></p>
+              <a href="servicios.html" class="row-cta">Ver servicio <span>→</span></a>
+            </div>
+            <div class="row-body-right"><img src="" alt="" class="row-img" loading="lazy"></div>
+          </div>
+        </div>
+      </li>
+      <li class="teaser-row">
+        <div class="row-header">
+          <span class="teaser-num">03</span>
+          <span class="teaser-name">Gestión de Alquiler</span>
+          <span class="teaser-arrow">→</span>
+        </div>
+        <div class="row-body-wrap">
+          <div class="row-body">
+            <div class="row-body-left">
+              <div class="row-divider"></div>
+              <p class="row-desc"></p>
+              <a href="servicios.html" class="row-cta">Ver servicio <span>→</span></a>
+            </div>
+            <div class="row-body-right"><img src="" alt="" class="row-img" loading="lazy"></div>
+          </div>
+        </div>
+      </li>
+      <li class="teaser-row">
+        <div class="row-header">
+          <span class="teaser-num">04</span>
+          <span class="teaser-name">Asesoría de Inversión</span>
+          <span class="teaser-arrow">→</span>
+        </div>
+        <div class="row-body-wrap">
+          <div class="row-body">
+            <div class="row-body-left">
+              <div class="row-divider"></div>
+              <p class="row-desc"></p>
+              <a href="servicios.html" class="row-cta">Ver servicio <span>→</span></a>
+            </div>
+            <div class="row-body-right"><img src="" alt="" class="row-img" loading="lazy"></div>
+          </div>
+        </div>
+      </li>
+      <li class="teaser-row">
+        <div class="row-header">
+          <span class="teaser-num">05</span>
+          <span class="teaser-name">Gestión Patrimonial</span>
+          <span class="teaser-arrow">→</span>
+        </div>
+        <div class="row-body-wrap">
+          <div class="row-body">
+            <div class="row-body-left">
+              <div class="row-divider"></div>
+              <p class="row-desc"></p>
+              <a href="servicios.html" class="row-cta">Ver servicio <span>→</span></a>
+            </div>
+            <div class="row-body-right"><img src="" alt="" class="row-img" loading="lazy"></div>
+          </div>
+        </div>
+      </li>
+      <li class="teaser-row">
+        <div class="row-header">
+          <span class="teaser-num">06</span>
+          <span class="teaser-name">Asesoría Jurídica</span>
+          <span class="teaser-arrow">→</span>
+        </div>
+        <div class="row-body-wrap">
+          <div class="row-body">
+            <div class="row-body-left">
+              <div class="row-divider"></div>
+              <p class="row-desc"></p>
+              <a href="servicios.html" class="row-cta">Ver servicio <span>→</span></a>
+            </div>
+            <div class="row-body-right"><img src="" alt="" class="row-img" loading="lazy"></div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="teaser-footer" id="teaser-footer">
+      <a href="servicios.html" class="teaser-all-link">Ver todos los servicios <span>→</span></a>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       §6 GLASS TESTIMONIALS
+  ═════════════════════════════════════════════ -->
+  <section id="testimonials" aria-label="Testimonios de clientes">
+    <div class="testi-bg"></div>
+    <div class="testi-overlay"></div>
+
+    <div class="testi-card-wrap">
+      <div class="testi-glass">
+        <div class="testi-border-spin"></div>
+        <div class="testi-inner">
+          <div class="testi-layout">
+            <div class="testi-portrait-wrap">
+              <div class="testi-portrait" id="testi-portrait">
+                <span class="testi-initials" id="testi-initials">RM</span>
+              </div>
+            </div>
+            <div class="testi-right">
+              <div class="testi-quote-wrap">
+                <p class="testi-quote active" id="testi-q">
+                  "Juvilma encontró en tres semanas lo que nosotros llevábamos dos años buscando. Su discreción y conocimiento del mercado de lujo no tienen comparación."
+                </p>
+              </div>
+              <div class="testi-meta">
+                <span class="testi-attribution" id="testi-attr">Familia Rodríguez-Montoya &nbsp;·&nbsp; La Moraleja</span>
+                <div class="testi-controls">
+                  <button class="testi-btn" id="testi-prev" aria-label="Anterior">←</button>
+                  <button class="testi-btn" id="testi-next" aria-label="Siguiente">→</button>
+                </div>
+              </div>
+              <div class="testi-progress">
+                <div class="testi-progress-bar" id="testi-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       §7 NEIGHBORHOOD EXPLORER
+  ═════════════════════════════════════════════ -->
+  <section id="neighborhoods" aria-label="Zonas de Madrid">
+    <div class="nbhd-header" id="nbhd-header">
+      <span class="nbhd-eyebrow">Zonas</span>
+      <div class="nbhd-rule"></div>
+    </div>
+    <div class="nbhd-grid">
+      <a href="listings.html?zona=retiro" class="nbhd-tile" aria-label="Barrio de Retiro">
+        <div class="nbhd-tile-img" style="background-image:url(assets/cat-pisos.png)"></div>
+        <div class="nbhd-tile-overlay"></div>
+        <div class="nbhd-tile-content">
+          <span class="nbhd-tile-count">12 propiedades</span>
+          <span class="nbhd-tile-name">Barrio de Retiro</span>
+          <span class="nbhd-tile-link">Explorar →</span>
+        </div>
+      </a>
+      <a href="listings.html?zona=salamanca" class="nbhd-tile" aria-label="Salamanca">
+        <div class="nbhd-tile-img" style="background-image:url(assets/cat-aticos.png)"></div>
+        <div class="nbhd-tile-overlay"></div>
+        <div class="nbhd-tile-content">
+          <span class="nbhd-tile-count">18 propiedades</span>
+          <span class="nbhd-tile-name">Salamanca</span>
+          <span class="nbhd-tile-link">Explorar →</span>
+        </div>
+      </a>
+      <a href="listings.html?zona=chamberi" class="nbhd-tile" aria-label="Chamberí">
+        <div class="nbhd-tile-img" style="background-image:url(assets/cat-casas.png)"></div>
+        <div class="nbhd-tile-overlay"></div>
+        <div class="nbhd-tile-content">
+          <span class="nbhd-tile-count">9 propiedades</span>
+          <span class="nbhd-tile-name">Chamberí</span>
+          <span class="nbhd-tile-link">Explorar →</span>
+        </div>
+      </a>
+      <a href="listings.html?zona=moraleja" class="nbhd-tile" aria-label="La Moraleja">
+        <div class="nbhd-tile-img" style="background-image:url(assets/cat-chalets.png)"></div>
+        <div class="nbhd-tile-overlay"></div>
+        <div class="nbhd-tile-content">
+          <span class="nbhd-tile-count">7 propiedades</span>
+          <span class="nbhd-tile-name">La Moraleja</span>
+          <span class="nbhd-tile-link">Explorar →</span>
+        </div>
+      </a>
+      <a href="listings.html?zona=centro" class="nbhd-tile" aria-label="Centro Histórico">
+        <div class="nbhd-tile-img" style="background-image:url(assets/cat-locales.png)"></div>
+        <div class="nbhd-tile-overlay"></div>
+        <div class="nbhd-tile-content">
+          <span class="nbhd-tile-count">15 propiedades</span>
+          <span class="nbhd-tile-name">Centro Histórico</span>
+          <span class="nbhd-tile-link">Explorar →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       §8 CTA FINALE
+  ═════════════════════════════════════════════ -->
+  <section id="cta-finale" aria-label="Contactar">
+    <div class="cta-bg" aria-hidden="true"></div>
+    <div class="cta-overlay" aria-hidden="true"></div>
+    <span class="cta-ghost-num" id="cta-ghost" aria-hidden="true">25</span>
+
+    <div class="cta-layout">
+
+      <!-- Left: editorial headline + CTAs -->
+      <div class="cta-left">
+        <span class="cta-eyebrow" id="cta-eyebrow">
+          <span class="cta-eyebrow-rule"></span>
+          Comience su búsqueda
+        </span>
+        <h2 class="cta-headline" id="cta-headline">
+          Su próximo<br><em>hogar</em> le espera
+        </h2>
+        <p class="cta-sub" id="cta-sub">25 años eligiendo solo lo excepcional. Permítanos encontrar la propiedad que merece.</p>
+        <div class="cta-buttons" id="cta-btns">
+          <a href="contacto.html" class="btn-cta-primary">Solicitar consulta privada →</a>
+          <a href="listings.html" class="btn-cta-secondary">Ver propiedades</a>
+        </div>
+      </div>
+
+      <!-- Right: Apple glass stats card -->
+      <div class="cta-right" id="cta-right">
+        <div class="cta-stats-glass">
+          <div class="cta-glass-spin" aria-hidden="true"></div>
+          <div class="cta-glass-inner">
+            <span class="cta-glass-label">Juvilma Inmobiliaria · Desde 1999</span>
+            <div class="cta-stats-list">
+              <div class="cta-stat-item">
+                <span class="cta-stat-num">25</span>
+                <span class="cta-stat-suffix">+</span>
+                <span class="cta-stat-label">Años de<br>trayectoria</span>
+              </div>
+              <div class="cta-stat-item">
+                <span class="cta-stat-num">200</span>
+                <span class="cta-stat-suffix">+</span>
+                <span class="cta-stat-label">Operaciones<br>cerradas</span>
+              </div>
+              <div class="cta-stat-item">
+                <span class="cta-stat-num">100</span>
+                <span class="cta-stat-suffix">%</span>
+                <span class="cta-stat-label">Clientes<br>satisfechos</span>
+              </div>
+            </div>
+            <div class="cta-glass-cta-rule"></div>
+            <a href="contacto.html" class="cta-glass-cta">Agendar visita privada →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═════════════════════════════════════════════ -->
+  <footer id="site-footer">
+    <a href="index.html" class="footer-logo" aria-label="Juvilma Inmobiliaria">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="40" height="40" rx="8" fill="#2c2c2e"/>
+        <path d="M12 30 L12 14 L20 8 L28 14 L28 30" stroke="#e8d5a3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M16 30 L16 22 L24 22 L24 30" stroke="#e8d5a3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="footer-logo-name">Juvilma</div>
+        <div class="footer-logo-sub">Inmobiliaria</div>
+      </div>
+    </a>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="index.html">Inicio</a>
+      <a href="listings.html">Propiedades</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <span class="footer-copy">© 2025 Juvilma Inmobiliaria · Madrid</span>
+  </footer>
 
 
   <!-- ═══════════════════════════════════════════
@@ -600,6 +1869,382 @@
       sequence.forEach(({ el, delay }) => {
         setTimeout(() => el.classList.add('visible'), delay);
       });
+    })();
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    // SHARED IntersectionObserver for scroll reveals
+    // ─────────────────────────────────────────────────────────────────────
+    const revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18 });
+
+    // Trust numbers cells
+    document.querySelectorAll('.stat-cell').forEach(function (el, i) {
+      el.style.transitionDelay = (i * 120) + 'ms';
+      revealObserver.observe(el);
+    });
+
+    // Cinema header
+    revealObserver.observe(document.getElementById('cinema-header'));
+
+    // Cinema cards — observe the section, stagger-reveal all cards when it enters view
+    (function () {
+      const cinemaObs = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          document.querySelectorAll('.cinema-card').forEach(function (card, i) {
+            setTimeout(function () { card.classList.add('revealed'); }, i * 100);
+          });
+          cinemaObs.disconnect();
+        }
+      }, { threshold: 0.15 });
+      cinemaObs.observe(document.getElementById('cinema-strip'));
+    })();
+
+    // Services teaser header + accordion rows + footer
+    revealObserver.observe(document.getElementById('teaser-header'));
+    revealObserver.observe(document.getElementById('teaser-footer'));
+
+    // Neighborhood header + tiles
+    revealObserver.observe(document.getElementById('nbhd-header'));
+    document.querySelectorAll('.nbhd-tile').forEach(function (el, i) {
+      el.style.transitionDelay = (i * 90) + 'ms';
+      revealObserver.observe(el);
+    });
+
+    // CTA finale elements
+    revealObserver.observe(document.getElementById('cta-eyebrow'));
+    revealObserver.observe(document.getElementById('cta-headline'));
+    revealObserver.observe(document.getElementById('cta-sub'));
+    revealObserver.observe(document.getElementById('cta-btns'));
+    revealObserver.observe(document.getElementById('cta-right'));
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    // §1 SPRING COUNT-UP (numbers overshoot then settle)
+    // ─────────────────────────────────────────────────────────────────────
+    (function () {
+      const OVERSHOOT = 0.06;
+      const DURATION  = 1600; // ms total
+
+      function springEase(t) {
+        // Phase 1 (0→0.7): ease to overshoot value
+        // Phase 2 (0.7→1.0): ease back to target
+        if (t < 0.7) {
+          const p = t / 0.7;
+          const eased = 1 - Math.pow(1 - p, 3);
+          return eased * (1 + OVERSHOOT);
+        } else {
+          const p = (t - 0.7) / 0.3;
+          const eased = p * p * (3 - 2 * p); // smoothstep back
+          return (1 + OVERSHOOT) - OVERSHOOT * eased;
+        }
+      }
+
+      function animateStat(el) {
+        const target = parseFloat(el.dataset.target);
+        const start  = performance.now();
+        function tick(now) {
+          const t = Math.min((now - start) / DURATION, 1);
+          const val = springEase(t) * target;
+          el.textContent = Math.round(val);
+          if (t < 1) requestAnimationFrame(tick);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      const statsObs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            const cells = entry.target.querySelectorAll('.stat-number[data-target]');
+            cells.forEach(function (el, i) {
+              setTimeout(function () { animateStat(el); }, i * 120);
+            });
+            statsObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      statsObs.observe(document.getElementById('trust-numbers'));
+    })();
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    // §5 SERVICES TEASER ACCORDION
+    // ─────────────────────────────────────────────────────────────────────
+    (function () {
+      const ROW_DATA = [
+        { img: 'assets/cat-chalets.png', desc: 'Búsqueda y negociación exclusiva a su medida. Acompañamiento completo desde la primera visita hasta la firma.' },
+        { img: 'assets/cat-aticos.png',  desc: 'Estrategia de precio, visibilidad selectiva y negociación con los mejores compradores del mercado.' },
+        { img: 'assets/cat-pisos.png',   desc: 'Gestión integral del alquiler: selección de inquilinos, contratos e incidencias. Rentabilidad garantizada.' },
+        { img: 'assets/cat-casas.png',   desc: 'Análisis de rentabilidad, due diligence y estructuras de inversión para patrimonios privados.' },
+        { img: 'assets/cat-locales.png', desc: 'Administración discreta de carteras inmobiliarias. Cada activo en su máximo potencial.' },
+        { img: 'assets/cat-chalets.png', desc: 'Seguridad jurídica en cada fase. Desde la due diligence hasta la escritura notarial.' },
+      ];
+
+      const teaserList = document.querySelector('.teaser-rows');
+
+      document.querySelectorAll('.teaser-row').forEach(function (row, i) {
+        // Scroll reveal stagger
+        row.style.transitionDelay = (i * 70) + 'ms';
+        revealObserver.observe(row);
+
+        // Populate data lazily
+        const img  = row.querySelector('.row-img');
+        const desc = row.querySelector('.row-desc');
+        if (img)  img.src = ROW_DATA[i].img;
+        if (desc) desc.textContent = ROW_DATA[i].desc;
+
+        // Accordion expand on hover
+        row.addEventListener('mouseenter', function () {
+          document.querySelectorAll('.teaser-row.expanded').forEach(function (r) { r.classList.remove('expanded'); });
+          row.classList.add('expanded');
+          teaserList.classList.add('has-active');
+        });
+        row.addEventListener('mouseleave', function () {
+          row.classList.remove('expanded');
+          setTimeout(function () {
+            if (!teaserList.querySelector('.teaser-row.expanded')) {
+              teaserList.classList.remove('has-active');
+            }
+          }, 80);
+        });
+      });
+    })();
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    // §3 CINEMA DRAG-TO-SCROLL + LERP CURSOR
+    // ─────────────────────────────────────────────────────────────────────
+    (function () {
+      const viewport = document.getElementById('cinema-viewport');
+      const cursor   = document.getElementById('cinema-cursor');
+      let isDown = false, startX = 0, scrollStart = 0;
+      let cursorX = 0, cursorY = 0, lerpX = 0, lerpY = 0, rafId = null;
+
+      function lerpTick() {
+        lerpX += (cursorX - lerpX) * 0.14;
+        lerpY += (cursorY - lerpY) * 0.14;
+        cursor.style.left = lerpX + 'px';
+        cursor.style.top  = lerpY + 'px';
+        rafId = requestAnimationFrame(lerpTick);
+      }
+
+      viewport.addEventListener('mouseenter', function () {
+        cursor.classList.add('visible');
+        if (!rafId) rafId = requestAnimationFrame(lerpTick);
+      });
+      viewport.addEventListener('mouseleave', function () {
+        cursor.classList.remove('visible');
+        isDown = false;
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      });
+      viewport.addEventListener('mousemove', function (e) {
+        cursorX = e.clientX;
+        cursorY = e.clientY;
+      });
+      viewport.addEventListener('mousedown', function (e) {
+        isDown = true;
+        startX = e.pageX - viewport.offsetLeft;
+        scrollStart = viewport.scrollLeft;
+        viewport.style.userSelect = 'none';
+      });
+      window.addEventListener('mouseup', function () {
+        isDown = false;
+        viewport.style.userSelect = '';
+      });
+      viewport.addEventListener('mousemove', function (e) {
+        if (!isDown) return;
+        e.preventDefault();
+        const x    = e.pageX - viewport.offsetLeft;
+        const walk = (x - startX) * 1.8;
+        viewport.scrollLeft = scrollStart - walk;
+      });
+
+      // Prevent link clicks after drag
+      let dragged = false;
+      viewport.addEventListener('mousedown', function () { dragged = false; });
+      viewport.addEventListener('mousemove', function () { if (isDown) dragged = true; });
+      viewport.querySelectorAll('.cinema-card').forEach(function (card) {
+        card.addEventListener('click', function (e) { if (dragged) e.preventDefault(); });
+      });
+    })();
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    // §4 TEXT SCRAMBLE DECRYPT (brand quote)
+    // ─────────────────────────────────────────────────────────────────────
+    (function () {
+      const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789·—';
+      const ITERS = 8;
+
+      function scrambleWord(el, finalText, delay) {
+        setTimeout(function () {
+          let frame = 0;
+          function tick() {
+            if (frame >= ITERS) { el.textContent = finalText; return; }
+            let scrambled = '';
+            for (let i = 0; i < finalText.length; i++) {
+              if (finalText[i] === ' ') { scrambled += ' '; continue; }
+              if (Math.random() < frame / ITERS) {
+                scrambled += finalText[i];
+              } else {
+                scrambled += CHARS[Math.floor(Math.random() * CHARS.length)];
+              }
+            }
+            el.textContent = scrambled;
+            frame++;
+            setTimeout(tick, 55);
+          }
+          tick();
+        }, delay);
+      }
+
+      const brandObs = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          document.getElementById('brand-statement').classList.add('in-view');
+          const words = document.querySelectorAll('#brand-quote .scramble-word');
+          words.forEach(function (el, i) {
+            const original = el.textContent;
+            scrambleWord(el, original, i * 60);
+          });
+          brandObs.disconnect();
+        }
+      }, { threshold: 0.4 });
+      brandObs.observe(document.getElementById('brand-statement'));
+    })();
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    // §6 TESTIMONIAL CAROUSEL (auto-advance + progress bar + portrait)
+    // ─────────────────────────────────────────────────────────────────────
+    (function () {
+      const TESTIMONIALS = [
+        {
+          quote:    '"Juvilma encontró en tres semanas lo que nosotros llevábamos dos años buscando. Su discreción y conocimiento del mercado de lujo no tienen comparación."',
+          attr:     'Familia Rodríguez-Montoya · La Moraleja',
+          initials: 'RM'
+        },
+        {
+          quote:    '"La venta de nuestra propiedad en Salamanca fue impecable. Precio justo, comprador ideal, y cero sobresaltos. Un equipo extraordinario."',
+          attr:     'Ignacio Herrera · Salamanca, Madrid',
+          initials: 'IH'
+        },
+        {
+          quote:    '"Llevan nuestra cartera de activos desde 2018. La rentabilidad ha superado cada año nuestras expectativas. Profesionalismo absoluto."',
+          attr:     'M. García-Lozano Family Office · Madrid',
+          initials: 'GL'
+        },
+      ];
+
+      let current = 0;
+      let autoTimer = null;
+      const quoteEl    = document.getElementById('testi-q');
+      const attrEl     = document.getElementById('testi-attr');
+      const barEl      = document.getElementById('testi-bar');
+      const portraitEl = document.getElementById('testi-portrait');
+      const initialsEl = document.getElementById('testi-initials');
+
+      function startProgress() {
+        barEl.style.transition = 'none';
+        barEl.style.width = '0%';
+        void barEl.offsetWidth;
+        barEl.classList.add('running');
+        autoTimer = setTimeout(function () { goTo(current + 1, 'next'); }, 7000);
+      }
+
+      function stopProgress() {
+        clearTimeout(autoTimer);
+        barEl.classList.remove('running');
+        barEl.style.transition = 'none';
+        barEl.style.width = '0%';
+      }
+
+      function goTo(idx, dir) {
+        stopProgress();
+        const next     = ((idx % TESTIMONIALS.length) + TESTIMONIALS.length) % TESTIMONIALS.length;
+        const outClass = dir === 'next' ? 'slide-out-left' : 'slide-out-right';
+        const inClass  = dir === 'next' ? 'slide-in-left'  : 'slide-in-right';
+
+        quoteEl.classList.add(outClass);
+        attrEl.classList.add('fading');
+        portraitEl.classList.add('fading');
+
+        setTimeout(function () {
+          quoteEl.textContent    = TESTIMONIALS[next].quote;
+          attrEl.textContent     = TESTIMONIALS[next].attr;
+          initialsEl.textContent = TESTIMONIALS[next].initials;
+
+          quoteEl.classList.remove('active', outClass);
+          quoteEl.classList.add(inClass);
+          attrEl.classList.remove('fading');
+          portraitEl.classList.remove('fading');
+
+          void quoteEl.offsetWidth; // force reflow before removing inClass
+          quoteEl.classList.remove(inClass);
+          quoteEl.classList.add('active');
+          current = next;
+          startProgress();
+        }, 500);
+      }
+
+      document.getElementById('testi-prev').addEventListener('click', function () { goTo(current - 1, 'prev'); });
+      document.getElementById('testi-next').addEventListener('click', function () { goTo(current + 1, 'next'); });
+
+      // Start when section enters view
+      const testiObs = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          startProgress();
+          testiObs.disconnect();
+        }
+      }, { threshold: 0.3 });
+      testiObs.observe(document.getElementById('testimonials'));
+    })();
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    // §7 NEIGHBORHOOD 3D PERSPECTIVE TILT
+    // ─────────────────────────────────────────────────────────────────────
+    (function () {
+      const STRENGTH = 10; // max degrees rotation
+
+      document.querySelectorAll('.nbhd-tile').forEach(function (tile) {
+        tile.addEventListener('mousemove', function (e) {
+          const rect = tile.getBoundingClientRect();
+          const cx   = rect.left + rect.width / 2;
+          const cy   = rect.top  + rect.height / 2;
+          const rx   = ((e.clientY - cy) / (rect.height / 2)) * -STRENGTH;
+          const ry   = ((e.clientX - cx) / (rect.width  / 2)) *  STRENGTH;
+          tile.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(1.03)';
+          tile.style.transition = 'transform 0.12s ease';
+          tile.style.zIndex = '2';
+        });
+        tile.addEventListener('mouseleave', function () {
+          tile.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
+          tile.style.transition = 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+          tile.style.zIndex = '';
+        });
+      });
+    })();
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    // §8 GHOST NUMBER PARALLAX
+    // ─────────────────────────────────────────────────────────────────────
+    (function () {
+      const ghost   = document.getElementById('cta-ghost');
+      const section = document.getElementById('cta-finale');
+      if (!ghost || !section) return;
+      window.addEventListener('scroll', function () {
+        const rect   = section.getBoundingClientRect();
+        const offset = (window.innerHeight / 2 - rect.top - rect.height / 2) * 0.1;
+        ghost.style.transform = 'translateY(' + offset + 'px)';
+      }, { passive: true });
     })();
   </script>
 
