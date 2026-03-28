@@ -774,6 +774,219 @@
     .teaser-all-link:hover { gap: 0.85rem; }
 
     /* ═══════════════════════════════════════════
+       §5.5 FEATURE CAROUSEL (Por qué elegirnos)
+    ═══════════════════════════════════════════ */
+    #fc-section {
+      padding: clamp(5rem, 9vw, 8rem) clamp(1rem, 3vw, 2rem);
+    }
+    .fc-outer { max-width: 1400px; margin: 0 auto; }
+    .fc-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: clamp(1.5rem, 3vw, 3.5rem);
+      border: 1px solid rgba(232, 213, 163, 0.15);
+      display: flex;
+      flex-direction: column;
+      min-height: 600px;
+    }
+    @media (min-width: 1024px) {
+      .fc-container { flex-direction: row; aspect-ratio: 16/9; min-height: unset; }
+    }
+    .fc-left {
+      position: relative;
+      width: 100%;
+      min-height: 350px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 4rem 3rem;
+    }
+    @media (min-width: 1024px) {
+      .fc-left {
+        width: 40%;
+        min-height: unset;
+        height: 100%;
+        justify-content: flex-start;
+        padding: 2rem 4rem;
+      }
+    }
+    .fc-fade-top {
+      position: absolute; inset-x: 0; top: 0;
+      height: 5rem;
+      background: linear-gradient(to bottom, var(--accent) 0%, transparent 100%);
+      z-index: 2; pointer-events: none;
+    }
+    .fc-fade-bottom {
+      position: absolute; inset-x: 0; bottom: 0;
+      height: 5rem;
+      background: linear-gradient(to top, var(--accent) 0%, transparent 100%);
+      z-index: 2; pointer-events: none;
+    }
+    .fc-items {
+      position: relative;
+      height: 65px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+    @media (min-width: 1024px) { .fc-items { justify-content: flex-start; } }
+    .fc-chip {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.875rem 1.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(28, 28, 30, 0.2);
+      cursor: pointer;
+      white-space: nowrap;
+      text-align: left;
+      background: transparent;
+      color: rgba(28, 28, 30, 0.5);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+      height: 58px;
+    }
+    .fc-chip.fc-chip-active {
+      background: var(--bg);
+      color: var(--accent);
+      border-color: var(--bg);
+      z-index: 10;
+    }
+    .fc-chip:not(.fc-chip-active):hover {
+      border-color: rgba(28, 28, 30, 0.45);
+      color: rgba(28, 28, 30, 0.8);
+    }
+    .fc-chip-icon {
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .fc-chip-icon svg {
+      width: 18px; height: 18px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .fc-chip-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    /* Right panel */
+    .fc-right {
+      flex: 1;
+      position: relative;
+      min-height: 520px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2.5rem;
+      border-top: 1px solid rgba(232, 213, 163, 0.08);
+      overflow: hidden;
+    }
+    @media (min-width: 1024px) {
+      .fc-right {
+        border-top: none;
+        border-left: 1px solid rgba(232, 213, 163, 0.08);
+        min-height: unset;
+        height: 100%;
+      }
+    }
+    .fc-cards {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 4/5;
+    }
+    .fc-card {
+      position: absolute; inset: 0;
+      border-radius: 1.75rem;
+      overflow: hidden;
+      border: 6px solid var(--bg);
+      background: var(--bg);
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(0) scale(0.7) rotate(0deg);
+    }
+    .fc-card.fc-card-active {
+      opacity: 1;
+      transform: translateX(0) scale(1) rotate(0deg);
+      pointer-events: auto;
+      z-index: 20;
+    }
+    .fc-card.fc-card-prev {
+      opacity: 0.35;
+      transform: translateX(-90px) scale(0.85) rotate(-3deg);
+      z-index: 10;
+    }
+    .fc-card.fc-card-next {
+      opacity: 0.35;
+      transform: translateX(90px) scale(0.85) rotate(3deg);
+      z-index: 10;
+    }
+    .fc-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: filter 0.6s ease;
+    }
+    .fc-card:not(.fc-card-active) img {
+      filter: grayscale(1) blur(2px) brightness(0.7);
+    }
+    .fc-card-overlay {
+      position: absolute; inset-x: 0; bottom: 0;
+      padding: 2.5rem 2rem 2rem;
+      padding-top: 7rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 55%, transparent 100%);
+      pointer-events: none;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.4s ease 0.1s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+    }
+    .fc-card.fc-card-active .fc-card-overlay { opacity: 1; transform: translateY(0); }
+    .fc-card-badge {
+      display: inline-flex; align-items: center;
+      background: var(--bg); color: var(--text);
+      padding: 0.3rem 0.9rem; border-radius: 999px;
+      font-size: 0.58rem; font-weight: 300;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      border: 1px solid rgba(232, 213, 163, 0.18);
+    }
+    .fc-card-desc {
+      color: white;
+      font-family: 'Gloock', serif;
+      font-size: clamp(0.95rem, 1.8vw, 1.3rem);
+      line-height: 1.4;
+    }
+    .fc-card-live {
+      position: absolute; top: 1.75rem; left: 1.75rem;
+      display: flex; align-items: center; gap: 0.55rem;
+      opacity: 0; transition: opacity 0.35s ease;
+    }
+    .fc-card.fc-card-active .fc-card-live { opacity: 1; }
+    .fc-card-live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 8px white, 0 0 16px rgba(255,255,255,0.4);
+    }
+    .fc-card-live-text {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.58rem; font-weight: 200;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ═══════════════════════════════════════════
        §6 GLASS TESTIMONIALS
     ═══════════════════════════════════════════ */
     #testimonials {
@@ -954,6 +1167,95 @@
       transition: opacity 0.3s ease, transform 0.3s var(--ease-out);
     }
     .nbhd-tile:hover .nbhd-tile-link { opacity: 1; transform: translateY(0); }
+
+    /* ═══════════════════════════════════════════
+       §7.5 GLOBAL PRESENCE GLOBE
+    ═══════════════════════════════════════════ */
+    #globe-section {
+      padding: clamp(5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .globe-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: clamp(2rem, 6vw, 5rem);
+      flex-direction: column;
+    }
+    @media (min-width: 1024px) { .globe-inner { flex-direction: row; } }
+    .globe-text { flex: 1; min-width: 0; }
+    .globe-eyebrow {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); display: block; margin-bottom: 1.2rem;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .globe-eyebrow.revealed { opacity: 1; transform: translateY(0); }
+    .globe-title {
+      font-family: 'Gloock', serif; font-weight: 400;
+      font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.1;
+      color: var(--text); margin-bottom: 1.5rem;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.6s var(--ease-out) 0.1s, transform 0.6s var(--ease-out) 0.1s;
+    }
+    .globe-title.revealed { opacity: 1; transform: translateY(0); }
+    .globe-desc {
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: clamp(0.875rem, 1.4vw, 1rem); line-height: 1.75;
+      color: var(--text-muted); max-width: 440px; margin-bottom: 2.5rem;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.6s var(--ease-out) 0.2s, transform 0.6s var(--ease-out) 0.2s;
+    }
+    .globe-desc.revealed { opacity: 1; transform: translateY(0); }
+    .globe-cities {
+      display: flex; flex-wrap: wrap; gap: 0.55rem;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.6s var(--ease-out) 0.3s, transform 0.6s var(--ease-out) 0.3s;
+    }
+    .globe-cities.revealed { opacity: 1; transform: translateY(0); }
+    .globe-city-tag {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.3rem 0.85rem;
+      border: 1px solid rgba(232, 213, 163, 0.18); border-radius: 999px;
+      font-family: 'DM Sans', sans-serif; font-weight: 200;
+      font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .globe-city-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+    }
+    .globe-canvas-wrap {
+      flex: 1; min-width: 0;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    #globe-canvas {
+      width: 100%; max-width: 540px;
+      aspect-ratio: 1/1;
+      display: block;
+      cursor: grab; touch-action: none;
+      opacity: 0; transition: opacity 1.4s ease;
+    }
+    .globe-ring {
+      position: absolute;
+      width: calc(100% + 10%); height: calc(100% + 10%);
+      border-radius: 50%;
+      border: 1px solid rgba(232, 213, 163, 0.07);
+      pointer-events: none; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .globe-ring-outer {
+      position: absolute;
+      width: calc(100% + 30%); height: calc(100% + 30%);
+      border-radius: 50%;
+      border: 1px solid rgba(232, 213, 163, 0.03);
+      pointer-events: none; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
 
     /* ═══════════════════════════════════════════
        §8 CTA FINALE
@@ -1584,6 +1886,25 @@
 
 
   <!-- ═══════════════════════════════════════════
+       §5.5 FEATURE CAROUSEL (Por qué elegirnos)
+  ═════════════════════════════════════════════ -->
+  <section id="fc-section" aria-label="Por qué elegirnos">
+    <div class="fc-outer">
+      <div class="fc-container">
+        <div class="fc-left" id="fc-left">
+          <div class="fc-fade-top"></div>
+          <div class="fc-fade-bottom"></div>
+          <div class="fc-items" id="fc-items"></div>
+        </div>
+        <div class="fc-right" id="fc-right">
+          <div class="fc-cards" id="fc-cards"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
        §6 GLASS TESTIMONIALS
   ═════════════════════════════════════════════ -->
   <section id="testimonials" aria-label="Testimonios de clientes">
@@ -1678,6 +1999,35 @@
           <span class="nbhd-tile-link">Explorar →</span>
         </div>
       </a>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       §7.5 GLOBAL PRESENCE GLOBE
+  ═════════════════════════════════════════════ -->
+  <section id="globe-section" aria-label="Presencia global">
+    <div class="globe-inner">
+      <div class="globe-text">
+        <span class="globe-eyebrow" id="globe-eyebrow">Presencia Internacional</span>
+        <h2 class="globe-title" id="globe-title">Conexiones que<br>cruzan fronteras</h2>
+        <p class="globe-desc" id="globe-desc">Nuestro alcance internacional nos permite conectar propiedades exclusivas en Madrid con compradores e inversores de todo el mundo. Discreción, precisión y excelencia sin fronteras.</p>
+        <div class="globe-cities" id="globe-cities">
+          <span class="globe-city-tag"><span class="globe-city-dot"></span>Londres</span>
+          <span class="globe-city-tag"><span class="globe-city-dot"></span>París</span>
+          <span class="globe-city-tag"><span class="globe-city-dot"></span>Nueva York</span>
+          <span class="globe-city-tag"><span class="globe-city-dot"></span>Dubái</span>
+          <span class="globe-city-tag"><span class="globe-city-dot"></span>Ginebra</span>
+          <span class="globe-city-tag"><span class="globe-city-dot"></span>Singapur</span>
+          <span class="globe-city-tag"><span class="globe-city-dot"></span>Miami</span>
+          <span class="globe-city-tag"><span class="globe-city-dot"></span>Moscú</span>
+        </div>
+      </div>
+      <div class="globe-canvas-wrap" id="globe-wrap">
+        <div class="globe-ring-outer"></div>
+        <div class="globe-ring"></div>
+        <canvas id="globe-canvas"></canvas>
+      </div>
     </div>
   </section>
 
@@ -2208,6 +2558,187 @@
 
 
     // ─────────────────────────────────────────────────────────────────────
+    // §5.5 FEATURE CAROUSEL
+    // ─────────────────────────────────────────────────────────────────────
+    (function () {
+      var FEATURES = [
+        {
+          id: 'prime',
+          label: 'Ubicaciones Prime',
+          icon: 'location',
+          image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?q=80&w=1200',
+          description: 'Las mejores zonas de Madrid, seleccionadas con criterio y experiencia.'
+        },
+        {
+          id: 'advisory',
+          label: 'Asesoría Experta',
+          icon: 'user',
+          image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200',
+          description: 'Un equipo de asesores con décadas de experiencia a tu servicio.'
+        },
+        {
+          id: 'global',
+          label: 'Alcance Global',
+          icon: 'globe',
+          image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1200',
+          description: 'Conectamos compradores e inversores de los cinco continentes.'
+        },
+        {
+          id: 'exclusive',
+          label: 'Acceso Exclusivo',
+          icon: 'star',
+          image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1200',
+          description: 'Propiedades fuera de mercado que solo Juvilma puede ofrecerte.'
+        },
+        {
+          id: 'integral',
+          label: 'Gestión Integral',
+          icon: 'settings',
+          image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1200',
+          description: 'Nos encargamos de todo, desde la búsqueda hasta la firma.'
+        },
+        {
+          id: 'financing',
+          label: 'Financiación',
+          icon: 'money',
+          image: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?q=80&w=1200',
+          description: 'Condiciones preferentes con los mejores bancos del mercado.'
+        },
+        {
+          id: 'legal',
+          label: 'Seguridad Jurídica',
+          icon: 'shield',
+          image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=1200',
+          description: 'Garantía total en cada operación. Tu inversión, protegida.'
+        },
+        {
+          id: 'heritage',
+          label: 'Legado Familiar',
+          icon: 'home',
+          image: 'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?q=80&w=1200',
+          description: 'Inversiones que perduran y se transmiten de generación en generación.'
+        }
+      ];
+
+      var ICONS = {
+        location: '<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+        user:     '<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+        globe:    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+        star:     '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+        settings: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+        money:    '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+        shield:   '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+        home:     '<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'
+      };
+
+      var ITEM_HEIGHT = 65;
+      var AUTO_INTERVAL = 3200;
+      var len = FEATURES.length;
+      var step = 0;
+      var isPaused = false;
+      var ticker = null;
+
+      var itemsEl = document.getElementById('fc-items');
+      var cardsEl = document.getElementById('fc-cards');
+      if (!itemsEl || !cardsEl) return;
+
+      function ci() { return ((step % len) + len) % len; }
+
+      function wrapVal(min, max, v) {
+        var range = max - min;
+        return ((((v - min) % range) + range) % range) + min;
+      }
+
+      function cardStatus(i) {
+        var idx = ci();
+        var diff = i - idx;
+        var nd = diff;
+        if (diff > len / 2) nd -= len;
+        if (diff < -len / 2) nd += len;
+        if (nd === 0) return 'active';
+        if (nd === -1) return 'prev';
+        if (nd === 1) return 'next';
+        return 'hidden';
+      }
+
+      // Build chips
+      var chips = [];
+      FEATURES.forEach(function (f, i) {
+        var btn = document.createElement('button');
+        btn.className = 'fc-chip';
+        btn.setAttribute('aria-label', f.label);
+        btn.innerHTML =
+          '<span class="fc-chip-icon">' + (ICONS[f.icon] || ICONS.star) + '</span>' +
+          '<span class="fc-chip-label">' + f.label + '</span>';
+        btn.addEventListener('click', function () {
+          var diff = (i - ci() + len) % len;
+          if (diff > 0) { step += diff; update(); }
+        });
+        btn.addEventListener('mouseenter', function () { isPaused = true; });
+        btn.addEventListener('mouseleave', function () { isPaused = false; });
+        itemsEl.appendChild(btn);
+        chips.push(btn);
+      });
+
+      // Build cards
+      var cards = [];
+      FEATURES.forEach(function (f, i) {
+        var card = document.createElement('div');
+        card.className = 'fc-card';
+        card.innerHTML =
+          '<img src="' + f.image + '" alt="' + f.label + '" loading="lazy">' +
+          '<div class="fc-card-live">' +
+            '<div class="fc-card-live-dot"></div>' +
+            '<span class="fc-card-live-text">Seleccionado</span>' +
+          '</div>' +
+          '<div class="fc-card-overlay">' +
+            '<div class="fc-card-badge">' + (i + 1) + ' &middot; ' + f.label + '</div>' +
+            '<p class="fc-card-desc">' + f.description + '</p>' +
+          '</div>';
+        cardsEl.appendChild(card);
+        cards.push(card);
+      });
+
+      function update() {
+        var idx = ci();
+        chips.forEach(function (chip, i) {
+          var distance = i - idx;
+          var wd = wrapVal(-(len / 2), len / 2, distance);
+          chip.style.transform = 'translateY(' + (wd * ITEM_HEIGHT) + 'px)';
+          chip.style.opacity = String(Math.max(0, 1 - Math.abs(wd) * 0.25));
+          if (i === idx) { chip.classList.add('fc-chip-active'); }
+          else { chip.classList.remove('fc-chip-active'); }
+        });
+        cards.forEach(function (card, i) {
+          var status = cardStatus(i);
+          card.classList.remove('fc-card-active', 'fc-card-prev', 'fc-card-next');
+          if (status === 'active') card.classList.add('fc-card-active');
+          else if (status === 'prev') card.classList.add('fc-card-prev');
+          else if (status === 'next') card.classList.add('fc-card-next');
+        });
+      }
+
+      function startTicker() {
+        clearInterval(ticker);
+        ticker = setInterval(function () {
+          if (!isPaused) { step++; update(); }
+        }, AUTO_INTERVAL);
+      }
+
+      var fcObs = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          startTicker();
+          fcObs.disconnect();
+        }
+      }, { threshold: 0.25 });
+      var fcSection = document.getElementById('fc-section');
+      if (fcSection) fcObs.observe(fcSection);
+
+      update();
+    })();
+
+
+    // ─────────────────────────────────────────────────────────────────────
     // §7 NEIGHBORHOOD 3D PERSPECTIVE TILT
     // ─────────────────────────────────────────────────────────────────────
     (function () {
@@ -2245,6 +2776,108 @@
         const offset = (window.innerHeight / 2 - rect.top - rect.height / 2) * 0.1;
         ghost.style.transform = 'translateY(' + offset + 'px)';
       }, { passive: true });
+    })();
+  </script>
+
+  <!-- §7.5 GLOBE — loaded as ES module via CDN (no build step required) -->
+  <script type="module">
+    import createGlobe from 'https://esm.sh/cobe@0.6.3';
+
+    (function () {
+      var canvas = document.getElementById('globe-canvas');
+      if (!canvas) return;
+
+      // Brand accent: #e8d5a3 → normalised to [0–1]
+      var GOLD = [0.91, 0.84, 0.64];
+      var DARK = [0.11, 0.11, 0.09];
+
+      var MARKERS = [
+        { location: [40.4168, -3.7038],  size: 0.08 },  // Madrid (HQ)
+        { location: [51.5074, -0.1278],  size: 0.04 },  // London
+        { location: [48.8566,  2.3522],  size: 0.04 },  // Paris
+        { location: [40.7128, -74.006],  size: 0.04 },  // New York
+        { location: [25.2048,  55.2708], size: 0.04 },  // Dubai
+        { location: [46.2044,   6.1432], size: 0.03 },  // Geneva
+        { location: [ 1.3521, 103.8198], size: 0.03 },  // Singapore
+        { location: [25.7617, -80.1918], size: 0.03 },  // Miami
+        { location: [55.7558,  37.6173], size: 0.03 },  // Moscow
+      ];
+
+      var phi = 0.5;
+      var pointerStart = null;
+      var phiDrag = 0;
+      var phiCommit = 0;
+      var isDragging = false;
+      var globe = null;
+
+      function init() {
+        if (globe) return;
+        var width = canvas.offsetWidth;
+        if (width === 0) return;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        globe = createGlobe(canvas, {
+          devicePixelRatio: dpr,
+          width:  width * dpr,
+          height: width * dpr,
+          phi:    0.5,
+          theta:  0.22,
+          dark:   1,
+          diffuse: 1.4,
+          mapSamples: 16000,
+          mapBrightness: 5.5,
+          baseColor:   DARK,
+          markerColor: GOLD,
+          glowColor:   GOLD,
+          markers: MARKERS,
+          onRender: function (state) {
+            if (!isDragging) phi += 0.003;
+            state.phi = phi + phiCommit + phiDrag;
+            state.width  = canvas.offsetWidth * dpr;
+            state.height = canvas.offsetWidth * dpr;
+          },
+        });
+
+        canvas.style.opacity = '1';
+      }
+
+      // Drag-to-rotate
+      canvas.addEventListener('pointerdown', function (e) {
+        pointerStart = e.clientX;
+        isDragging   = true;
+        canvas.style.cursor = 'grabbing';
+      }, { passive: true });
+      window.addEventListener('pointermove', function (e) {
+        if (pointerStart === null) return;
+        phiDrag = (e.clientX - pointerStart) / 220;
+      }, { passive: true });
+      window.addEventListener('pointerup', function () {
+        if (pointerStart === null) return;
+        phiCommit  += phiDrag;
+        phiDrag     = 0;
+        pointerStart = null;
+        isDragging  = false;
+        canvas.style.cursor = 'grab';
+      }, { passive: true });
+
+      // Only initialise when visible
+      var globeObs = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { init(); globeObs.disconnect(); }
+      }, { threshold: 0.1 });
+      globeObs.observe(canvas);
+
+      // Text reveal
+      var textObs = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          ['globe-eyebrow','globe-title','globe-desc','globe-cities'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.add('revealed');
+          });
+          textObs.disconnect();
+        }
+      }, { threshold: 0.2 });
+      var section = document.getElementById('globe-section');
+      if (section) textObs.observe(section);
     })();
   </script>
 
